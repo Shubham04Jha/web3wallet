@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+    --color-navy-900: #213448;
+    --color-navy-400: #547792;
+    --color-teal: #94B4C1;
+    --color-teal-900: #6F97A6;
+    --color-biege: #EAE0CF;
+    --color-taupe: #A58F7A;
+}
+
+.my-icon {
+  /* Icon size will relative to font-size of .text-wrapper */
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.text-wrapper {
+  /* Change this! */
+  font-size: inherit;
+  /* layout stuff */
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
+}
