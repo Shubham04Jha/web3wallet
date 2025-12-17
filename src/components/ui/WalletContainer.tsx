@@ -33,7 +33,6 @@ const KeyDisplay = ({keyVal,keyType,isPrivate=false}: KeyDisplay)=>{
         <div className="w-full">
             <p className="font-medium text-2xl hover:cursor-default">{keyType}</p>
             <div className="flex justify-between items-center w-full">
-                {/* <p className={cn("hover:text-white text-gray-900 hover:cursor-pointer my-2",!visible&&"masked tracking-widest",!visible&&"font-bold")}>{keyVal}</p> */}
                 <input
                     type={visible ? "text" : "password"}
                     value={keyVal}
