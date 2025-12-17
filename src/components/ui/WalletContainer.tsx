@@ -29,17 +29,25 @@ interface KeyDisplay extends React.HTMLAttributes<HTMLDivElement>{
 }
 const KeyDisplay = ({keyVal,keyType,isPrivate=false}: KeyDisplay)=>{
     const [visible,setVisible] = useState<boolean>(!isPrivate);
-    // let dots = "• ".repeat(keyVal.length-1)+"•";
     return (
-        <>
+        <div className="w-full">
             <p className="font-medium text-2xl hover:cursor-default">{keyType}</p>
-            <div className="flex justify-between items-center">
-                <p className={cn("hover:text-white text-gray-900 hover:cursor-pointer my-2",!visible&&"masked tracking-widest",!visible&&"font-bold")}>{keyVal}</p>
+            <div className="flex justify-between items-center w-full">
+                {/* <p className={cn("hover:text-white text-gray-900 hover:cursor-pointer my-2",!visible&&"masked tracking-widest",!visible&&"font-bold")}>{keyVal}</p> */}
+                <input
+                    type={visible ? "text" : "password"}
+                    value={keyVal}
+                    readOnly
+                    className={cn(
+                        "bg-transparent text-gray-900 my-2 hover:cursor-pointer hover:text-white",
+                        !visible && "font-bold","w-full border-none outline-none rounded-md  focus:text-white"
+                    )}
+                />
                 {isPrivate&&<Button className=" hover:bg-teal-900 " variant="icon" size="icon" onClick={()=>setVisible(prev=>!prev)}>
                     {visible?<Eye  size={16}/>:<EyeOff  size={16} />}
                     </Button>}
             </div>
-        </>)
+        </div>)
 }
 
 
