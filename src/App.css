@@ -23,3 +23,7 @@
   gap: 0.25em;
   align-items: center;
 }
+
+.masked {
+  -webkit-text-security: disc; /* options: circle, square */
+}

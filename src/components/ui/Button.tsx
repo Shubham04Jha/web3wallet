@@ -2,7 +2,7 @@ import { cn } from "../../lib/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     variant?: "primary"|"secondary"|"danger"|"icon",
-    size?: "xs"|"sm"|"lg",
+    size?: "xs"|"sm"|"lg"|"icon",
     icon?: React.ReactNode
 }
 export const Button= ({children, variant="primary", size="sm", icon, className, ...props}:ButtonProps)=>{
@@ -16,7 +16,8 @@ export const Button= ({children, variant="primary", size="sm", icon, className, 
     const sizes={
         xs: "px-0.5 py-0",
         sm: "px-3 py-2 text-sm",
-        lg: "px-6 py-3 text-lg"
+        lg: "px-6 py-3 text-lg",
+        icon: "p-2"
     }
     return <button
     {...props} className={
