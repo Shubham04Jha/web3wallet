@@ -5,16 +5,20 @@ import { useState } from "react"
 
 interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement>{
     // className mainly for the col-span for row fit to boxes.
+    keyPair: {
+        publicKey: string,
+        privateKey: string,
+    }
 }
-export const WalletContainer = ({className,...props}: WalletContainerInterface)=>{
+export const WalletContainer = ({className, keyPair, ...props}: WalletContainerInterface)=>{
     return <div {...props} className={cn("border border-white w-full rounded-xl ",className)}>
         <div className="flex justify-between mx-8 my-4">
             <p className="text-4xl font-bold">Wallet1</p>
             <Button className=" hover:bg-teal-900" variant="icon" ><Trash className="my-icon" size={16}/></Button>
         </div>
         <div className="rounded-xl py-4 px-8 gap-y-2 flex flex-col bg-navy-400">
-            <KeyDisplay keyType="Public Key" keyVal="4eeHwagJMgkaSzdmegPxXmgb5g5nfdWcSQQHauDMh1PA" />
-            <KeyDisplay keyVal="zfgNDLuDvHu3idGm2jjkMW8T5a2pcaxBGVBxVgYCPr72ffoFtNh2MppMynAMAqU6S7YDf7yGuAB54pYTDQMDqhv" isPrivate={true} keyType="Private Key" />
+            <KeyDisplay keyType="Public Key" keyVal={keyPair.publicKey} />
+            <KeyDisplay keyVal={keyPair.privateKey} isPrivate={true} keyType="Private Key" />
             <div className="flex text-gray-900">
                 <Asterisk className="" size={16}/>
                 <p className="text-sm text-gray-900">Click on key to copy</p>
