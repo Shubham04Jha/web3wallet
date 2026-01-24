@@ -6,6 +6,7 @@ import type { Wallet } from "../lib/types";
 const globalKeyStore: Wallet[] = []
 
 let cipherSeedWords: string|null = null; // base64 encoded cipherSeedWords
+let SEEDIV: string|null = null;
 
 export const useCrypto = ()=>{
     const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -20,8 +21,8 @@ export const useCrypto = ()=>{
         }
     }
     const showCipherSeedWords = async ()=>{
-        if(!cipherSeedWords) return '';
-        return await decryptData(cipherSeedWords);
+        if(!cipherSeedWords||!SEEDIV) return '';
+        return await decryptData(cipherSeedWords, SEEDIV);
     }
     const showPrivateKeyFromIdx = async(idx: number)=>{
         if(idx<0||idx>=globalKeyStore.length){
@@ -29,13 +30,15 @@ export const useCrypto = ()=>{
         }
         const wallet = globalKeyStore[idx];
         const cipheredBase64Key = wallet.cipherPrivateKeyString;
-        return await decryptData(cipheredBase64Key);
+        const encIv = wallet.encIV;
+        return await decryptData(cipheredBase64Key, encIv);
     }
     useEffect(()=>{
         (async()=>{
             try {
                 setIsLoading(true)
-                const {seedWords, wallets} = await loadStoredWalletDetails();
+                const {seedWords, wallets, seedIv} = await loadStoredWalletDetails();
+                SEEDIV = seedIv;
                 cipherSeedWords = seedWords;
                 wallets.forEach((wallet: Wallet) => {
                     globalKeyStore.push(wallet);

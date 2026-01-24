@@ -1,8 +1,13 @@
 import { base64ToBytes, bytesToBase64 } from "./encodeDecode";
 
 let cryptoKey: CryptoKey|null  = null;
-let IV: null|Uint8Array = null;
+let salt: null|Uint8Array = null;
 export const generateCryptoKeyFromPassword = async (password: string)=>{
+    const encSalt = localStorage.getItem('salt');
+    if(!encSalt){
+        throw new Error('salt not initialised');
+    }
+    salt = base64ToBytes(encSalt);
     const passwordAsBytes = new TextEncoder().encode(password);
     const baseKey = await crypto.subtle.importKey(
         'raw',
@@ -11,11 +16,10 @@ export const generateCryptoKeyFromPassword = async (password: string)=>{
         false,
         ['deriveKey']
     );
-    const salt = crypto.getRandomValues(new Uint8Array(16));
     cryptoKey = await crypto.subtle.deriveKey(
         {
             name: 'PBKDF2',
-            salt,
+            salt: salt as BufferSource,
             iterations: 100000,
             hash: 'SHA-256'
         },
@@ -24,27 +28,31 @@ export const generateCryptoKeyFromPassword = async (password: string)=>{
         false,
         ['encrypt', 'decrypt']
     );
-    const base64IV = localStorage.getItem('IV')!;
+    const base64IV = localStorage.getItem('testIv')!;
     const testCipher = localStorage.getItem('testCipher')!;
-    IV = base64ToBytes(base64IV);
-    const testRes = await decrypt(base64ToBytes(testCipher)); // will throw error if password is wrong, or localStorage was tempered with or the contents were not loaded on to the localStorage yet.
+    const IV = base64ToBytes(base64IV);
+    const testRes = await decrypt(base64ToBytes(testCipher), IV); // will throw error if password is wrong, or localStorage was tempered with or the contents were not loaded on to the localStorage yet.
     console.log(testRes); // if this is reached password is set, IV is loaded adn we are good to go.
 }
 
 const encrypt = async(plainBuffer: Uint8Array)=>{
-    if (!cryptoKey || !IV) {
-        throw new Error('CryptoKey or IV is not initialized');
+    if (!cryptoKey ) {
+        throw new Error('CryptoKey is not initialized');
     }
-    return await crypto.subtle.encrypt(
-        {name:'AES-GCM',iv: IV as BufferSource},
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const bytes = await crypto.subtle.encrypt(
+        {name:'AES-GCM',iv},
         cryptoKey,
         plainBuffer as BufferSource
     );
+    return {
+        bytes, iv
+    }
 }
 
-const decrypt = async(encryptedBuffer: Uint8Array)=>{
-    if (!cryptoKey || !IV) {
-        throw new Error('CryptoKey or IV is not initialized');
+const decrypt = async(encryptedBuffer: Uint8Array, IV: Uint8Array)=>{
+    if (!cryptoKey) {
+        throw new Error('CryptoKey is not initialized');
     }
     return await crypto.subtle.decrypt(
         {name: 'AES-GCM', iv: IV as BufferSource },
@@ -53,10 +61,11 @@ const decrypt = async(encryptedBuffer: Uint8Array)=>{
     );
 }
 
-export const decryptData = async(base64EncodedString: string)=>{
+export const decryptData = async(base64EncodedString: string, encIv: string)=>{
     let bytes: Uint8Array|null = null;
+    const iv = base64ToBytes(encIv);
     try {
-        const rawBuffer = await decrypt(base64ToBytes(base64EncodedString)); // bytes that was received 
+        const rawBuffer = await decrypt(base64ToBytes(base64EncodedString),iv); // bytes that was received 
         bytes = new Uint8Array(rawBuffer);
         return new TextDecoder().decode(bytes); // returns the initial string representation.
     } catch (error) {
@@ -69,8 +78,8 @@ export const decryptData = async(base64EncodedString: string)=>{
 export const encryptData = async(plainText: string)=>{
     try {
         const plainBytes = new TextEncoder().encode(plainText);
-        const bytes = await encrypt(plainBytes);
-        return bytesToBase64(new Uint8Array(bytes));
+        const {bytes,iv} = await encrypt(plainBytes);
+        return {encData: bytesToBase64(new Uint8Array(bytes)), encIv: bytesToBase64(new Uint8Array(iv))};
     } catch (error) {
         return null;
     }

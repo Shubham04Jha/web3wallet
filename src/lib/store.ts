@@ -3,8 +3,9 @@ export const loadStoredWalletDetails = async()=>{
     if(!stringifiedData){
         throw new Error("stored wallet details not found, Please Reenter the seed words to import the wallet");
     }
-    const {seedWords,testCipher, iv, wallets} = await JSON.parse(stringifiedData);
-    localStorage.setItem('IV',iv);
+    const {seedWords, wallets, seedIv, testCipher, testIv, salt} = await JSON.parse(stringifiedData);
+    localStorage.setItem('salt',salt);
+    localStorage.setItem('testIv',testIv);
     localStorage.setItem('testCipher',testCipher);
-    return {seedWords, wallets};
+    return {seedWords, wallets, seedIv};
 }
