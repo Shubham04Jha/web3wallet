@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { decryptData, generateCryptoKeyFromPassword } from "../lib/cryptography";
+import { decryptData, generateCryptoKeyFromPassword } from "../lib/encryptDecrypt";
 import { loadStoredWalletDetails } from "../lib/store";
 import type { Wallet } from "../lib/types";
 
