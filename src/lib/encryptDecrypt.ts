@@ -1,4 +1,5 @@
 import { base64ToBytes, bytesToBase64 } from "./encodeDecode";
+import type { CipherData } from "./types";
 
 let cryptoKey: CryptoKey|null  = null;
 let salt: null|Uint8Array = null;
@@ -32,7 +33,7 @@ export const generateCryptoKeyFromPassword = async (password: string)=>{
     const testCipher = localStorage.getItem('testCipher')!;
     const IV = base64ToBytes(base64IV);
     const testRes = await decrypt(base64ToBytes(testCipher), IV); // will throw error if password is wrong, or localStorage was tempered with or the contents were not loaded on to the localStorage yet.
-    console.log(testRes); // if this is reached password is set, IV is loaded adn we are good to go.
+    console.log(testRes); // if this is reached password is set, IV is loaded and we are good to go.
 }
 
 const encrypt = async(plainBuffer: Uint8Array)=>{
@@ -61,11 +62,12 @@ const decrypt = async(encryptedBuffer: Uint8Array, IV: Uint8Array)=>{
     );
 }
 
-export const decryptData = async(base64EncodedString: string, encIv: string)=>{
+export const decryptData = async(cipherData: CipherData)=>{
     let bytes: Uint8Array|null = null;
-    const iv = base64ToBytes(encIv);
+    const base64EncodedCipherString = cipherData.cipherEncString;
+    const iv = base64ToBytes(cipherData.encIV);
     try {
-        const rawBuffer = await decrypt(base64ToBytes(base64EncodedString),iv); // bytes that was received 
+        const rawBuffer = await decrypt(base64ToBytes(base64EncodedCipherString),iv); // bytes that was received 
         bytes = new Uint8Array(rawBuffer);
         return new TextDecoder().decode(bytes); // returns the initial string representation.
     } catch (error) {
@@ -79,7 +81,7 @@ export const encryptData = async(plainText: string)=>{
     try {
         const plainBytes = new TextEncoder().encode(plainText);
         const {bytes,iv} = await encrypt(plainBytes);
-        return {encData: bytesToBase64(new Uint8Array(bytes)), encIv: bytesToBase64(new Uint8Array(iv))};
+        return {cipherEncString: bytesToBase64(new Uint8Array(bytes)), encIV: bytesToBase64(new Uint8Array(iv))};
     } catch (error) {
         return null;
     }
