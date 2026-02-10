@@ -5,7 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     size?: "xs"|"sm"|"lg"|"icon",
     icon?: React.ReactNode
 }
-export const Button= ({children, variant="primary", size="sm", icon, className, ...props}:ButtonProps)=>{
+export const Button= ({children, variant="primary", size="sm", icon, className, disabled,  ...props}:ButtonProps)=>{
     const base = "rounded-md flex justify-center items-center font-semibold bg-transparent border-0 outline-none hover:cursor-pointer";
     const variants = {
         primary: "bg-biege hover:bg-taupe border-yellow-600 text-black",
@@ -19,9 +19,10 @@ export const Button= ({children, variant="primary", size="sm", icon, className, 
         lg: "px-6 py-3 text-lg",
         icon: "p-2"
     }
+    const disabledStyles = "opacity-50 cursor-now-allowed hover:cursor-not-allowed grayscale-[0.5] hover:bg-biege hover:bg-teal";
     return <button
-    {...props} className={
-        cn(base, sizes[size], variants[variant], className )
+    {...props} disabled={disabled} className={
+        cn(base, sizes[size], variants[variant],disabled&&disabledStyles, className )
     }>
         <div className="text-wrapper">
             {children}
