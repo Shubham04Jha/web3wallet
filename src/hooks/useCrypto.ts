@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { decryptData, encryptData, generateCryptoKeyFromPassword } from "../lib/encryptDecrypt";
-import { addSeedToStore, addWalletToStore, loadStoredWalletDetails, WalletStore } from "../lib/store";
+import { decryptData, encryptData, generateCryptoKeyFromPassword, resetPassword } from "../lib/encryptDecrypt";
+import { addSeedToStore, addWalletToStore, loadStoredWalletDetails, resetWalletStore, WalletStore } from "../lib/store";
 import type { Wallet } from "../lib/types";
 
 const showSeedWords = async ()=>{
@@ -16,6 +16,20 @@ const showPrivateKeyFromIdx = async(idx: number)=>{
     const cipheredBase64Key = wallet.cipherPrivateKeyString;
     const encIV = wallet.encIV;
     return await decryptData({cipherEncString: cipheredBase64Key, encIV});
+}
+
+const resetWallet = async(plainSeed: string, password: string)=>{
+    const saltB64Enc = await resetPassword(password);
+    const testString = 'Tested CryptoKey successfully';
+    const testData = await encryptData(testString);
+    if(!testData){
+        throw new Error('error in encrypting testString');
+    }
+    const seedData = await encryptData(plainSeed);
+    if(!seedData){
+        throw new Error('error in encrypting seedString');
+    }
+    resetWalletStore(testData, seedData, saltB64Enc);
 }
 
 const encryptAndStoreSeed = async (plainSeed: string)=>{
@@ -46,7 +60,8 @@ export const useCrypto = ()=>{
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const inputPassword = async (password: string)=>{
         try {
-            await generateCryptoKeyFromPassword(password);
+            await generateCryptoKeyFromPassword(password,WalletStore.salt, WalletStore.test);
+            setIsLogin(true);
             //cryptoKey is loaded. IV is set-uped.
         } catch (error) {
             setIsLogin(false);
@@ -78,5 +93,5 @@ export const useCrypto = ()=>{
 
 export {
     showSeedWords,encryptAndStoreSeed, showPrivateKeyFromIdx,
-    encryptAndStoreWallet,
+    encryptAndStoreWallet, resetWallet,
 }
