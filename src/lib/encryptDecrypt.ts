@@ -3,7 +3,7 @@ import type { CipherData } from "./types";
 
 let cryptoKey: CryptoKey | null = null;
 
-const PBKDF2_CONFIG = { name: 'PBKDF2', iterations: 100000, hash: 'SHA-256' };
+const PBKDF2_CONFIG = { name: 'PBKDF2', iterations: 1000000, hash: 'SHA-256' };
 const AES_CONFIG = { name: 'AES-GCM', length: 128 };
 
 const getDerivedKey = async (password: string, saltBytes: Uint8Array) => {
