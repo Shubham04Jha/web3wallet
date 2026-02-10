@@ -19,37 +19,45 @@ const inMemoryStorage: InMemoryStorage = {
     wallets: [],
 }
 
+const sync = ()=>{
+    localStorage.setItem('walletStore',JSON.stringify(inMemoryStorage));
+}
+
+export const resetWalletStore = (test: CipherData, seed: CipherData, salt: string)=>{
+    inMemoryStorage.wallets = [];
+    inMemoryStorage.test = test; 
+    inMemoryStorage.seed = seed; 
+    inMemoryStorage.salt = salt;
+    sync();
+}
+
 export const loadStoredWalletDetails = ()=>{
-    const stringifiedData = localStorage.getItem('wallet');
+    const stringifiedData = localStorage.getItem('walletStore');
     if(!stringifiedData){
         throw new Error("stored wallet details not found, Please Re-Enter the seed words to import the wallet");
     }
     const obj = JSON.parse(stringifiedData) as InMemoryStorage;
     Object.assign(inMemoryStorage,obj);
-    const {test, salt} = inMemoryStorage;
-    localStorage.setItem('salt',salt);
-    localStorage.setItem('testIv',test.encIV);
-    localStorage.setItem('testCipher',test.cipherEncString);
 }
 
 export const addWalletToStore=(wallet: Wallet)=>{
     inMemoryStorage.wallets.push(wallet);
-    localStorage.setItem('wallet',JSON.stringify(inMemoryStorage));
+    sync();
 }
 
 export const addTestToStore=(test: CipherData)=>{
     inMemoryStorage.test = test;
-    localStorage.setItem('wallet',JSON.stringify(inMemoryStorage));
+    sync();
 }
 
 export const addSeedToStore = (seed: CipherData)=>{
     inMemoryStorage.seed = seed;
-    localStorage.setItem('wallet',JSON.stringify(inMemoryStorage));
+    sync();
 }
 
 export const addSaltToStore = (salt: string)=>{
     inMemoryStorage.salt = salt;
-    localStorage.setItem('wallet',JSON.stringify(inMemoryStorage));
+    sync();
 }
 
 export const WalletStore: DeepReadOnly<InMemoryStorage> = inMemoryStorage;
