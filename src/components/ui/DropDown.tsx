@@ -32,8 +32,12 @@ export const DropDownMenu = ({text, showSeed}: DropDownMenuInterface)=>{
                     {open?<ChevronUp size={32} strokeWidth={1} />:<ChevronDown size={32} strokeWidth={1} />}
                 </Button>
             </div>
-            {open&&<ItemsLayer items={items} />}
-            {open&&<Note/>}
+            <div onClick={()=>{
+                navigator.clipboard.writeText(items.join(' '));
+            }}>
+                {open&&<ItemsLayer items={items} />}
+                {open&&<Note/>}
+            </div>
         </div>
     )
 }

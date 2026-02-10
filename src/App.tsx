@@ -4,14 +4,12 @@ import { Layout } from './components/Layout'
 import { DropDownMenu } from './components/ui/DropDown'
 import { WalletsDashBoard } from './components/WalletsDashBoard';
 import {showSeedWords, useCrypto} from "./hooks/useCrypto"
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Onboard } from './components/Onboard';
 import { Button } from './components/ui/Button';
 
 
 function App() {
-  const mnemonics = "hen army message club pipe believe keep marble legal market maximum hidden";
-  const items = mnemonics.split(" ");
   return (
     <>
       <BrowserRouter>

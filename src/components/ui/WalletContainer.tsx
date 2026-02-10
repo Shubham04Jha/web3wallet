@@ -1,4 +1,4 @@
-import { Asterisk, Eye, EyeOff, Trash } from "lucide-react";
+import { Asterisk, Eye, EyeOff } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { Button } from "./Button";
 import { useState } from "react";
@@ -14,9 +14,6 @@ export const WalletContainer = ({ className, publicKey, getPrivateKey, index, ..
         <div {...props} className={cn("border border-white w-full rounded-xl overflow-hidden", className)}>
             <div className="flex justify-between items-center mx-8 my-4">
                 <p className="text-4xl font-bold">Wallet {index + 1}</p>
-                {/* <Button className="hover:bg-red-900/50" variant="icon">
-                    <Trash className="my-icon" size={16} />
-                </Button> */}
             </div>
             <div className="py-4 px-8 gap-y-4 flex flex-col bg-navy-400">
                 <KeyDisplay keyType="Public Key" keyVal={publicKey} />
@@ -57,7 +54,7 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
     };
 
     const copyToClipboard = () => {
-        if (!visible && isPrivate) return; // Prevent copying masked text
+        if (!visible ) return; // Prevent copying masked text
         navigator.clipboard.writeText(currentKey);
     };
 
