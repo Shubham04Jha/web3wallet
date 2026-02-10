@@ -32,7 +32,7 @@ export const generateCryptoKeyFromPassword = async (password: string, b64EncSalt
     const IV = base64ToBytes(test.encIV);
     
     const testRes = await decrypt(base64ToBytes(test.cipherEncString), IV); // will throw error if password is wrong, or localStorage was tempered with or the contents were not loaded on to the localStorage yet.
-    console.log(testRes); // if this is reached password is set, testCipherData is loaded and we are good to go.
+    console.log(new TextDecoder().decode(testRes)); // if this is reached password is set, testCipherData is loaded and we are good to go.
 };
 
 export const resetPassword = async (password: string) => {

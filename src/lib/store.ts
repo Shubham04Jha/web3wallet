@@ -21,6 +21,12 @@ const inMemoryStorage: InMemoryStorage = {
 
 const sync = ()=>{
     localStorage.setItem('walletStore',JSON.stringify(inMemoryStorage));
+    loadStoredWalletDetails();
+}
+
+export const clearWallets=()=>{
+    inMemoryStorage.wallets = [];
+    sync();
 }
 
 export const resetWalletStore = (test: CipherData, seed: CipherData, salt: string)=>{

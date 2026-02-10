@@ -1,59 +1,99 @@
-import { Asterisk, Eye, EyeOff, Trash } from "lucide-react"
-import { cn } from "../../lib/utils"
-import { Button } from "./Button"
-import { useState } from "react"
+import { Asterisk, Eye, EyeOff, Trash } from "lucide-react";
+import { cn } from "../../lib/utils";
+import { Button } from "./Button";
+import { useState } from "react";
 
-interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement>{
-    // className mainly for the col-span for row fit to boxes.
-    keyPair: {
-        publicKey: string,
-        privateKey: string,
-    }
+interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> {
+    publicKey: string;
+    getPrivateKey: () => Promise<string | null>;
+    index: number;
 }
-export const WalletContainer = ({className, keyPair, ...props}: WalletContainerInterface)=>{
-    return <div {...props} className={cn("border border-white w-full rounded-xl ",className)}>
-        <div className="flex justify-between mx-8 my-4">
-            <p className="text-4xl font-bold">Wallet1</p>
-            <Button className=" hover:bg-teal-900" variant="icon" ><Trash className="my-icon" size={16}/></Button>
-        </div>
-        <div className="rounded-xl py-4 px-8 gap-y-2 flex flex-col bg-navy-400">
-            <KeyDisplay keyType="Public Key" keyVal={keyPair.publicKey} />
-            <KeyDisplay keyVal={keyPair.privateKey} isPrivate={true} keyType="Private Key" />
-            <div className="flex text-gray-900">
-                <Asterisk className="" size={16}/>
-                <p className="text-sm text-gray-900">Click on key to copy</p>
+
+export const WalletContainer = ({ className, publicKey, getPrivateKey, index, ...props }: WalletContainerInterface) => {
+    return (
+        <div {...props} className={cn("border border-white w-full rounded-xl overflow-hidden", className)}>
+            <div className="flex justify-between items-center mx-8 my-4">
+                <p className="text-4xl font-bold">Wallet {index + 1}</p>
+                {/* <Button className="hover:bg-red-900/50" variant="icon">
+                    <Trash className="my-icon" size={16} />
+                </Button> */}
+            </div>
+            <div className="py-4 px-8 gap-y-4 flex flex-col bg-navy-400">
+                <KeyDisplay keyType="Public Key" keyVal={publicKey} />
+                <KeyDisplay 
+                    keyType="Private Key" 
+                    isPrivate={true} 
+                    fetchKey={getPrivateKey} 
+                />
+                <div className="flex items-center text-gray-900 gap-1">
+                    <Asterisk size={14} />
+                    <p className="text-sm">Click on key to copy</p>
+                </div>
             </div>
         </div>
-    </div>
+    );
+};
+
+interface KeyDisplayProps {
+    keyType: string;
+    keyVal?: string; // For public keys
+    isPrivate?: boolean;
+    fetchKey?: () => Promise<string | null>; // For private keys
 }
-interface KeyDisplay extends React.HTMLAttributes<HTMLDivElement>{
-    keyVal: string,
-    isPrivate?: boolean,
-    keyType: string
-}
-const KeyDisplay = ({keyVal,keyType,isPrivate=false}: KeyDisplay)=>{
-    const [visible,setVisible] = useState<boolean>(!isPrivate);
+
+const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKey }: KeyDisplayProps) => {
+    const [visible, setVisible] = useState<boolean>(!isPrivate);
+    const [currentKey, setCurrentKey] = useState<string>(initialKeyVal || "");
+    const [loading, setLoading] = useState(false);
+
+    const toggleVisibility = async () => {
+        if (!visible && isPrivate && fetchKey && !currentKey) {
+            setLoading(true);
+            const decrypted = await fetchKey();
+            if (decrypted) setCurrentKey(decrypted);
+            setLoading(false);
+        }
+        setVisible(!visible);
+    };
+
+    const copyToClipboard = () => {
+        if (!visible && isPrivate) return; // Prevent copying masked text
+        navigator.clipboard.writeText(currentKey);
+    };
+
     return (
         <div className="w-full">
-            <p className="font-medium text-2xl hover:cursor-default">{keyType}</p>
-            <div className="flex justify-between items-center w-full">
+            <p className="font-medium text-xl text-biege hover:cursor-default">{keyType}</p>
+            <div className="flex justify-between items-center w-full gap-2 mt-1">
                 <input
                     type={visible ? "text" : "password"}
-                    value={keyVal}
+                    value={visible ? currentKey : "••••••••••••••••••••••••••••••••"}
                     readOnly
+                    onClick={copyToClipboard}
                     className={cn(
-                        "bg-transparent text-gray-900 my-2 hover:cursor-pointer hover:text-white",
-                        !visible && "font-bold","w-full border-none outline-none rounded-md  focus:text-white"
+                        "bg-transparent text-gray-900 transition-colors hover:cursor-pointer hover:text-white",
+                        "w-full border-none outline-none rounded-md focus:text-white font-mono text-sm truncate",
+                        !visible && "tracking-widest"
                     )}
                 />
-                {isPrivate&&<Button className=" hover:bg-teal-900 " variant="icon" size="icon" onClick={()=>setVisible(prev=>!prev)}>
-                    {visible?<Eye  size={16}/>:<EyeOff  size={16} />}
-                    </Button>}
+                {isPrivate && (
+                    <Button 
+                        className="hover:bg-navy-900" 
+                        variant="icon" 
+                        size="icon" 
+                        onClick={toggleVisibility}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                        ) : visible ? (
+                            <Eye size={16} />
+                        ) : (
+                            <EyeOff size={16} />
+                        )}
+                    </Button>
+                )}
             </div>
-        </div>)
-}
-
-
-
-
-
+        </div>
+    );
+};
