@@ -19,7 +19,10 @@ export const Header = () => {
 
     return (
         <div className={cn("w-full grid grid-cols-120 items-center mb-8 ")}>
-            <p className="font-bold text-white text-4xl mb-4 text-center col-span-85">W3 Wallet</p>
+            <div className="col-span-85 flex items-center justify-center gap-4">
+                <img src="web3walletlogo3.png"  className="h-20 w-auto"/>
+                <p className="font-bold text-white text-4xl ">W3 Wallet</p>
+            </div>
             
             <div className="flex gap-4 col-span-35 justify-between">
                 <Button 
