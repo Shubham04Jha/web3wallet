@@ -5,7 +5,7 @@ import { resetWallet } from "../hooks/useCrypto";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye, Copy } from "lucide-react";
 import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
-import { copyToClipBoard } from "../lib/utils";
+import { cn, copyToClipBoard } from "../lib/utils";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 
 export const Onboard = () => {
@@ -155,25 +155,35 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
             </div>
 
             <div className="relative">
-                <textarea 
+                {/* REAL INPUT (receives typing) */}
+                <textarea
                     placeholder="Paste your seed phrase here or generate a new one..."
-                    className="w-full h-32 p-4 pr-12 rounded-md bg-navy-400 text-white border border-transparent focus:border-teal outline-none resize-none leading-relaxed font-mono"
+                    className={cn(
+                        "absolute inset-0 caret-white focus:border-teal outline-none bg-transparent text-transparent",
+                        "w-full h-48 p-4 pr-12 rounded-md border border-transparent resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                    )}
+                    maxLength={200}
+                    value={seed}
+                    onChange={(e) => setSeed(e.target.value)}
+                />
+
+                {/* DISPLAY LAYER */}
+                <textarea
                     value={isVisible ? seed : getMaskedSeed()}
-                    readOnly={!isVisible && seed.length > 0}
-                    onChange={(e) => {
-                        // Only update state if visible (prevents corrupting seed with dots)
-                        if (isVisible ) {
-                            setSeed(e.target.value);
-                        }
-                    }}
+                    readOnly
+                    className={cn(
+                        "bg-navy-400 text-white pointer-events-none",
+                        "w-full h-48 p-4 pr-12 rounded-md border border-transparent resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                    )}
                 />
                 {seed && (
                     <div className="absolute right-1 top-0">
-                        {!isVisible ? (
+                        {!isVisible? (
                             <ConfirmDialog
                                 title="Reveal Secret Phrase?"
                                 description="Make sure nobody is looking at your screen. These words provide full access to your wallet."
-                                onConfirm={() => setIsVisible(true)}
+                                onConfirm={() =>{ 
+                                    setIsVisible(true)}}
                                 trigger={
                                     <Button 
                                         type="button"
