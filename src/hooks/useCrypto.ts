@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { decryptData, encryptData, generateCryptoKeyFromPassword, resetPassword } from "../lib/encryptDecrypt";
 import { addSeedToStore, addWalletToStore, loadStoredWalletDetails, resetWalletStore, WalletStore } from "../lib/store";
 import type { Wallet } from "../lib/types";
+import { toast } from "react-toastify";
 
 const showSeedWords = async ()=>{
     return await decryptData(WalletStore.seed);
@@ -58,18 +59,36 @@ const encryptAndStoreWallet = async(path: string, publicKey: string, privateKey:
 export const useCrypto = ()=>{
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string|null>(null);
     const inputPassword = async (password: string)=>{
         try {
+            setIsLoading(true);
             await generateCryptoKeyFromPassword(password,WalletStore.salt, WalletStore.test);
             setIsLogin(true);
             //cryptoKey is loaded. IV is set-uped.
+            setError(null);
         } catch (error) {
             setIsLogin(false);
-            console.log('An error occured could be due to wrong password, Please Re-enter your password')
+            console.log('An error occured could be due to wrong password, Please Re-enter your password');
+            toast.error('An error occured could be due to wrong password, Please Re-enter your password', {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                }
+            );
+            setError('Wrong Password');
+        }finally{
+            setIsLoading(false);
         }
     }  
     useEffect(()=>{
         try {
+            setError(null);
             setIsLoading(true)
             loadStoredWalletDetails();
         } catch (error) {
@@ -87,7 +106,7 @@ export const useCrypto = ()=>{
         }
     },[])
     return{
-        isLoading, isLogin, inputPassword
+        isLoading, isLogin, inputPassword, error
     }
 }
 
