@@ -1,4 +1,4 @@
-import { generateMnemonic, mnemonicToSeed } from '@scure/bip39'
+import { generateMnemonic, mnemonicToSeed, validateMnemonic } from '@scure/bip39'
 import { wordlist } from '@scure/bip39/wordlists/english.js'
 import { HDKey } from '@scure/bip32'
 import nacl from 'tweetnacl'
@@ -6,6 +6,15 @@ import bs58 from 'bs58'
 
 export const getNewSeedPhrase = () => {
   return generateMnemonic(wordlist)
+}
+
+export const isValidSeedPhrase = (mnemonic: string): boolean => {
+  try {
+    const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ')
+    return validateMnemonic(normalized, wordlist);
+  } catch {
+    return false
+  }
 }
 
 export const getSolanaWalletByAccount = async (mnemonic: string, idx: number) => {
