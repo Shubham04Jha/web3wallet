@@ -10,15 +10,17 @@ export const getNewSeedPhrase = () => {
 
 export const isValidSeedPhrase = (mnemonic: string): boolean => {
   try {
-    const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ')
-    return validateMnemonic(normalized, wordlist);
+    const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ');
+    const res = validateMnemonic(normalized, wordlist);
+    return res;
   } catch {
     return false
   }
 }
 
 export const getSolanaWalletByAccount = async (mnemonic: string, idx: number) => {
-  const seed = await mnemonicToSeed(mnemonic)
+  const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ')
+  const seed = await mnemonicToSeed(normalized);
 
   const path = `m/44'/501'/${idx}'/0'`
 

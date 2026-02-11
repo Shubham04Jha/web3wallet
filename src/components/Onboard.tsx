@@ -1,10 +1,10 @@
 import { Tabs } from "radix-ui"
-import { useRef, useState} from "react";
+import { useEffect, useRef, useState} from "react";
 import { Button } from "./ui/Button";
 import { resetWallet } from "../hooks/useCrypto";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye } from "lucide-react";
-import { getNewSeedPhrase } from "../lib/walletGen";
+import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
 
 export const Onboard = () => {
     const [step, setStep] = useState<string>('1');
@@ -125,12 +125,24 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
     );
 };
 
+
 const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (seed: string) => void }) => {
     const [seed, setSeed] = useState("");
-    
+    const [isVisible, setIsVisible] = useState(false);
+    const [isValid,setIsValid] = useState<boolean>(isValidSeedPhrase(seed));
+    useEffect(()=>{
+        setIsValid(isValidSeedPhrase(seed));
+    },[seed])
     const handleGenerate = () => {
         const mnemonic = getNewSeedPhrase();
         setSeed(mnemonic);
+    };
+    const getMaskedSeed = () => {
+        if (!seed) return "";
+        return seed
+            .split(/\s+/) // seperate by space
+            .map(word => "•".repeat(word.length)) // "••••" per word
+            .join(" ");
     };
 
     return (
@@ -140,12 +152,31 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                 <p className="text-teal text-sm">Save these words securely. They are the only way to recover your wallet.</p>
             </div>
 
-            <textarea 
-                placeholder="Paste your seed phrase here or generate a new one..."
-                className="w-full h-32 p-4 rounded-md bg-navy-400 text-white border border-transparent focus:border-teal outline-none resize-none leading-relaxed"
-                value={seed}
-                onChange={(e) => setSeed(e.target.value)}
-            />
+            <div className="relative">
+                <textarea 
+                    placeholder="Paste your seed phrase here or generate a new one..."
+                    className="w-full h-32 p-4 pr-12 rounded-md bg-navy-400 text-white border border-transparent focus:border-teal outline-none resize-none leading-relaxed font-mono"
+                    value={isVisible ? seed : getMaskedSeed()}
+                    readOnly={!isVisible && seed.length > 0}
+                    onChange={(e) => {
+                        // Only update state if visible (prevents corrupting seed with dots)
+                        if (isVisible ) {
+                            setSeed(e.target.value);
+                        }
+                    }}
+                />
+                
+                {seed && (
+                    <button 
+                        type="button"
+                        onClick={() => setIsVisible(!isVisible)}
+                        className="absolute right-3 top-3 text-teal hover:text-biege transition-colors"
+                        title={isVisible ? "Hide Seed" : "Show Seed"}
+                    >
+                        {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                )}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <Button variant="secondary" onClick={handleGenerate}>
@@ -157,7 +188,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
             </div>
 
             <Button 
-                disabled={seed.split(" ").length < 12} 
+                disabled={!isValid} 
                 onClick={() => onComplete(seed)} 
                 size="lg"
                 className="w-full"

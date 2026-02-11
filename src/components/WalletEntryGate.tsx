@@ -45,7 +45,7 @@ export const WalletEntryGate = () => {
                     />
                     <Button type="submit">Unlock</Button>
                     {error&&<p className="text-xs text-red-400 text-center mt-2 italic">
-                        if you forgot your password then you would have to re-enter your seed phrase. 
+                        if you forgot your password then you would have to forget your wallet and re-enter your seed. 
                         As there is no other way to recover your password unless you bruteforce each password.
                     </p>}
                 </form>
