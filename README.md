@@ -1,45 +1,118 @@
-Web Wallet Architecture & Security Model
-The Objective
-To build a secure, browser-based wallet that handles seed phrases and key-pair derivation without ever storing secrets in plain text. The goal is to leverage the window.crypto.subtle API to ensure that even if someone gains access to the physical device's local storage, the data remains a useless collection of ciphertexts without the master password.
+#Preview
 
-Current Design Pattern
-I've settled on a Module-Level Singleton pattern for security and state management.
+## add password
+<img width="923" height="529" alt="image" src="https://github.com/user-attachments/assets/44e20d2f-a18d-4388-a233-302fe9fa5046" />
+## generate or import seed
+<img width="907" height="532" alt="image" src="https://github.com/user-attachments/assets/2fc77648-229e-4c43-ab86-c80a6712ff85" />
 
-1. Encryption Strategy
-Key Derivation: We use PBKDF2 with 100,000 iterations (SHA-256) to turn a user's password into a high-entropy AES-GCM key.
+<img width="921" height="537" alt="image" src="https://github.com/user-attachments/assets/77a89f0d-9734-4270-9826-b0bab135f783" />
 
-Storage: Only the Salt, IV, and Ciphertext are stored in localStorage.
+## confirmation before showing sensitive info:
+<img width="924" height="531" alt="image" src="https://github.com/user-attachments/assets/a3f3be2d-afc5-4c61-8770-f64b0511a776" />
+<img width="910" height="532" alt="image" src="https://github.com/user-attachments/assets/e6c582f4-6ad0-4a0e-8bb1-a18bd1ac0459" />
+<img width="918" height="529" alt="image" src="https://github.com/user-attachments/assets/22f0e087-40aa-4867-ba51-c0c83fc464e8" />
+<img width="925" height="533" alt="image" src="https://github.com/user-attachments/assets/8a445227-24e1-4003-b6e7-563ba5316786" />
 
-In-Memory Security: The CryptoKey is held in a private module-level variable. It is marked as extractable: false, meaning it cannot be exported or "scraped" easily from the console.
+## click to copy: 
+<img width="907" height="531" alt="image" src="https://github.com/user-attachments/assets/5499fc51-714f-4a37-90d2-1be81ce6f71d" />
 
-Persistence: A central sync() utility ensures the InMemoryStorage object and localStorage are always identical, while the sensitive CryptoKey is lost the moment the tab is closed or refreshed.
+## delete wallet confirmation:
+<img width="925" height="534" alt="image" src="https://github.com/user-attachments/assets/89179b5e-26e4-48b5-ad78-cba31ccddc43" />
 
-2. The Global Store Logic (store.ts)
-Instead of scattered localStorage calls, the app uses a centralized inMemoryStorage.
 
-Atomic Updates: Functions like addWalletToStore or resetWalletStore mutate the object and trigger a sync().
+All the information is stored locally for persistence.
+## Used crypto.subtle to handle encryption and decryption using browser's native crypto capabilities.
+<img width="921" height="533" alt="image" src="https://github.com/user-attachments/assets/219e399a-0010-47cc-afe1-2dba3b0509fc" />
 
-Live References: The UI uses a DeepReadOnly version of this store, ensuring components can read data but cannot accidentally mutate it without going through the proper crypto-gated setters.
 
-3. Encoding Standards
-Binary to Storage: All Uint8Array data (IVs, Salts, Keys) is converted to Base64 before hitting localStorage.
 
-Text to Binary: Standard string inputs are processed via TextEncoder before encryption to ensure UTF-8 consistency.
 
-The Thought Process (Timeline of Logic)
-I didn't start with a clean singleton. Here is how the architecture evolved:
 
-Phase 1: The "Heavy" Realization Initially, I thought about Web Workers for PBKDF2 because it's computationally expensive. However, SubtleCrypto handles this asynchronously on its own thread, making the added complexity of a manual Web Worker unnecessary for the current scope.
+## Features
 
-Phase 2: The Two-Password Dilemma I considered having a "Master Password" to open the app and a "Private Password" for signing transactions. I eventually realized this was "Security Theater." If a malicious script can read the DOM to steal one password, it can steal two. The bottleneck is the security of the execution environment itself.
+- HD wallet generation using BIP39 mnemonics
+- Seed phrase import or generation
+- Password-protected wallet access
+- Encrypted local persistence
+- On-demand private key decryption
+- Confirmation dialogs before sensitive actions
+- Copy-to-clipboard utilities
+- Wallet addition and deletion support
+- Local-only storage, no backend dependency
 
-Phase 3: Security vs. UX I debated asking for a password on every single decryption. While safer, it makes the wallet unusable. I decided to store the CryptoKey in memory only. It's a compromise: users stay logged in while the tab is open, but a refresh or "Logout" (clearing the reference) wipes the key completely.
+---
 
-Phase 4: Console Access & Physical Threats I accepted that I cannot hide secrets from a process running in the same memory space. If a user leaves their laptop unlocked and an attacker knows how to use the DevTools console to call my internal methods, they can see the keys. My solution is to add On-Demand Decryption—secrets stay encrypted in memory until the exact moment the user clicks "Show Private Key," accompanied by a confirmation dialogue.
+## Security Model
 
-Wallet Utilities
-[x] Seed Generation: Generates BIP39 mnemonics.
+### Encryption Pipeline
+- Password-derived encryption keys using PBKDF2 (SHA-256, 100k iterations)
+- AES-GCM encryption for confidentiality and integrity
+- Unique IV generated per encryption operation
 
-[x] Encryption Wrapper: Passes plain seeds/keys immediately into the AES-GCM flow.
+### Storage Design
+Only encrypted information is persisted in `localStorage`:
+- Salt
+- Initialization Vector (IV)
+- Ciphertext
 
-[x] Store Sync: Managed updates to local storage via a unified JSON blob.
+No seed phrases or private keys are stored in plaintext.
+
+### Memory Handling
+- Crypto keys remain only in memory during session
+- Refresh or logout clears access automatically
+- Secrets are decrypted only when explicitly requested
+
+---
+
+## Architecture Overview
+
+### Global Wallet Store
+A centralized in-memory store synchronizes encrypted data with `localStorage`.
+
+- Atomic state updates
+- Read-only UI access
+- Controlled update functions
+- Automatic persistence syncing
+
+### Encoding Strategy
+- Binary data encoded as Base64 for storage
+- Text handled using UTF-8 encoding via `TextEncoder`
+
+---
+
+## Tech Stack
+
+- TypeScript
+- Web Crypto API (`crypto.subtle`)
+- Browser LocalStorage
+- React UI
+- BIP39 mnemonic generation
+
+---
+
+## Design Decisions
+
+- Avoided Web Workers since `SubtleCrypto` already runs asynchronously
+- Removed multi-password scheme to avoid security theater
+- Balanced UX and security by keeping keys in memory only
+- Added confirmation flows before revealing sensitive data
+- Implemented singleton-style store for centralized wallet state
+
+---
+
+## Future Improvements
+
+- Persistent storage integrity verification (HMAC)
+- Multi-account derivation support
+- Transaction signing workflow
+- Wallet export/import flows
+- Hardware wallet integration
+- Backup and recovery enhancements
+
+---
+
+## Disclaimer
+
+This wallet is an experimental learning project and has not undergone formal security audits. Use cautiously for real assets.
+
+---
