@@ -3,8 +3,9 @@ import { useEffect, useRef, useState} from "react";
 import { Button } from "./ui/Button";
 import { resetWallet } from "../hooks/useCrypto";
 import { useNavigate } from "react-router-dom";
-import { EyeOff, Eye } from "lucide-react";
+import { EyeOff, Eye, Copy } from "lucide-react";
 import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
+import { copyToClipBoard } from "../lib/utils";
 
 export const Onboard = () => {
     const [step, setStep] = useState<string>('1');
@@ -167,14 +168,32 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                 />
                 
                 {seed && (
-                    <button 
-                        type="button"
-                        onClick={() => setIsVisible(!isVisible)}
-                        className="absolute right-3 top-3 text-teal hover:text-biege transition-colors"
-                        title={isVisible ? "Hide Seed" : "Show Seed"}
-                    >
-                        {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
+                    <div className="absolute right-1 top-0">
+                        <Button 
+                            type="button"
+                            variant="icon"
+                            size="icon"
+                            onClick={() => setIsVisible(!isVisible)}
+                            title={isVisible ? "Hide Seed" : "Show Seed"}
+                            className="text-teal hover:text-biege"
+                        >
+                            {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </Button>
+                        {isValid && (
+                            <Button 
+                                type="button"
+                                variant="icon"
+                                size="icon"
+                                onClick={() => {
+                                    copyToClipBoard(seed);
+                                }}
+                                title="Copy to Clipboard"
+                                className="text-teal hover:text-biege"
+                            >
+                                <Copy size={20} />
+                            </Button>
+                        )}
+                    </div>
                 )}
             </div>
 

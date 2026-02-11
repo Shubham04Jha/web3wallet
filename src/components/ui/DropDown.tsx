@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { cn } from "../../lib/utils"
+import { cn, copyToClipBoard } from "../../lib/utils"
 import { ChevronDown,ChevronUp, Copy } from "lucide-react";
 import { Button } from "./Button";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -55,7 +55,7 @@ export const DropDownMenu = ({text, showSeed}: DropDownMenuInterface)=>{
                 </div>
             )}
             {open&&<div onClick={()=>{
-                navigator.clipboard.writeText(items.join(' '));
+                copyToClipBoard(items.join(' '));
             }}>
                 <ItemsLayer items={items} />
                 <Note/>

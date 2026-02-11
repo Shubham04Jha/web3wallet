@@ -1,5 +1,5 @@
 import { Asterisk, Eye, EyeOff } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn, copyToClipBoard } from "../../lib/utils";
 import { Button } from "./Button";
 import { useState } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -54,9 +54,9 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
         setVisible(!visible);
     };
 
-    const copyToClipboard = () => {
+    const onCopy = () => {
         if (!visible ) return; // Prevent copying masked text
-        navigator.clipboard.writeText(currentKey);
+        copyToClipBoard(currentKey);
     };
 
     return (
@@ -67,7 +67,7 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
                     type={visible ? "text" : "password"}
                     value={visible ? currentKey : "••••••••••••••••••••••••••••••••"}
                     readOnly
-                    onClick={copyToClipboard}
+                    onClick={onCopy}
                     className={cn(
                         "bg-transparent text-gray-900 transition-colors hover:cursor-pointer hover:text-white",
                         "w-full border-none outline-none rounded-md focus:text-white font-mono text-sm truncate",
