@@ -29,8 +29,8 @@ export const Onboard = () => {
 
     return (
         <div className="flex justify-center w-full mb-8">
-            <Tabs.Root value={step} className="w-full max-w-md bg-navy-900 border border-navy-400 rounded-xl p-8 shadow-2xl">
-                <Tabs.List className="flex gap-2 mb-8 border-b border-navy-400 pb-2">
+            <Tabs.Root value={step} className="w-full max-w-lg bg-navy-900 border border-navy-400 rounded-xl p-8 shadow-2xl">
+                <Tabs.List className="flex gap-2 justify-around mb-2 border-b border-navy-400 pb-2">
                     <Tabs.Trigger 
                         value="1" 
                         disabled={step !== '1'}
