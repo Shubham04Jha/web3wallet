@@ -1,4 +1,4 @@
-import { Cog, Shredder } from 'lucide-react'
+import { Cog, Trash2 } from 'lucide-react'
 import { Button } from './ui/Button'
 import { cn } from '../lib/utils'
 import { WalletContainer } from './ui/WalletContainer'
@@ -32,7 +32,7 @@ export const WalletsDashBoard = ({text}: WalletsDashBoardInterface)=>{
                     refresh();
                 }}
                 >Generate</Button>
-                <Button variant='danger' icon={<Shredder className='my-icon'/>}
+                <Button variant='danger' icon={<Trash2 className='my-icon'/>}
                 onClick={()=>{
                     clearWallets();
                     refresh();

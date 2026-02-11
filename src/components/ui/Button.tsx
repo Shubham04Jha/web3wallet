@@ -6,7 +6,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     icon?: React.ReactNode
 }
 export const Button= ({children, variant="primary", size="sm", icon, className, disabled,  ...props}:ButtonProps)=>{
-    const base = "rounded-md flex justify-center items-center font-semibold bg-transparent border-0 outline-none hover:cursor-pointer";
+    const base = cn(
+        "rounded-md flex justify-center items-center font-semibold bg-transparent border-0 outline-none transition-all duration-200",
+        "hover:cursor-pointer",
+        "focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
+    );
     const variants = {
         primary: "bg-biege hover:bg-taupe border-yellow-600 text-black",
         secondary:"bg-teal hover:bg-teal-900 border-white",

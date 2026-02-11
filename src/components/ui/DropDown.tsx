@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { cn } from "../../lib/utils"
 import { ChevronDown,ChevronUp, Copy } from "lucide-react";
 import { Button } from "./Button";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 interface DropDownMenuInterface{
     text: string,
@@ -21,23 +22,44 @@ export const DropDownMenu = ({text, showSeed}: DropDownMenuInterface)=>{
             }).catch(err=>{
                 console.log(err.message);
             })
+        }else {
+            setItems([]);
         }
     },[open])
     return (
         <div className={cn(base)}>
-            <div onClick={()=>setOpen(prev=>!prev)}
-                className={cn("text-4xl flex justify-between py-8 px-12")}>
+            {!open ? (
+                <ConfirmDialog
+                    title="Reveal Secret Phrase?"
+                    description="Make sure nobody is looking at your screen. These words provide full access to your wallet."
+                    onConfirm={() => setOpen(true)}
+                    trigger={
+                        <div className={cn("text-4xl flex justify-between py-8 px-12")}>
+                            <p>{text}</p>
+                            <Button variant="icon" size="xs" className={cn("hover:bg-teal-900")}>
+                                <ChevronDown size={32} strokeWidth={1} />
+                            </Button>
+                        </div>
+                    }
+                    allowOutsideClick
+                />
+            ) : (
+                <div 
+                    onClick={()=>setOpen(false)}
+                    className={cn("text-4xl flex justify-between py-8 px-12")} 
+                >
                     <p>{text}</p>
-                <Button variant="icon" size="xs" className={cn("hover:bg-teal-900")}>
-                    {open?<ChevronUp size={32} strokeWidth={1} />:<ChevronDown size={32} strokeWidth={1} />}
-                </Button>
-            </div>
-            <div onClick={()=>{
+                    <Button variant="icon" size="xs" className={cn("hover:bg-teal-900")}>
+                        <ChevronUp size={32} strokeWidth={1} />
+                    </Button>
+                </div>
+            )}
+            {open&&<div onClick={()=>{
                 navigator.clipboard.writeText(items.join(' '));
             }}>
-                {open&&<ItemsLayer items={items} />}
-                {open&&<Note/>}
-            </div>
+                <ItemsLayer items={items} />
+                <Note/>
+            </div>}
         </div>
     )
 }

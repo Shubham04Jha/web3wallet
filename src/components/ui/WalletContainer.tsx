@@ -2,6 +2,7 @@ import { Asterisk, Eye, EyeOff } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { Button } from "./Button";
 import { useState } from "react";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> {
     publicKey: string;
@@ -74,21 +75,27 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
                     )}
                 />
                 {isPrivate && (
-                    <Button 
-                        className="hover:bg-navy-900" 
-                        variant="icon" 
-                        size="icon" 
-                        onClick={toggleVisibility}
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                        ) : visible ? (
-                            <Eye size={16} />
-                        ) : (
-                            <EyeOff size={16} />
-                        )}
-                    </Button>
+                    <ConfirmDialog
+                    title="Reveal Private Key?"
+                    description="WARNING: This key provides full control over your funds associated with that key. Ensure nobody is watching your screen and you are not sharing your window before proceeding."
+                    onConfirm={toggleVisibility}
+                    trigger={
+                        <Button 
+                            className="hover:bg-navy-900" 
+                            variant="icon" 
+                            size="icon" 
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                            ) : visible ? (
+                                <Eye size={16} />
+                            ) : (
+                                <EyeOff size={16} />
+                            )}
+                        </Button>
+                    }
+                    />
                 )}
             </div>
         </div>
