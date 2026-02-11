@@ -95,6 +95,7 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
                             )}
                         </Button>
                     }
+                    allowOutsideClick
                     />
                 )}
             </div>
