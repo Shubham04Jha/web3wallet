@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useCrypto, showSeedWords } from "../hooks/useCrypto";
 import { Button } from "./ui/Button";
 import { DropDownMenu } from "./ui/DropDown";
