@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye, Copy } from "lucide-react";
 import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
 import { copyToClipBoard } from "../lib/utils";
+import { ConfirmDialog } from "./ui/ConfirmDialog";
 
 export const Onboard = () => {
     const [step, setStep] = useState<string>('1');
@@ -166,19 +167,38 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                         }
                     }}
                 />
-                
                 {seed && (
                     <div className="absolute right-1 top-0">
-                        <Button 
-                            type="button"
-                            variant="icon"
-                            size="icon"
-                            onClick={() => setIsVisible(!isVisible)}
-                            title={isVisible ? "Hide Seed" : "Show Seed"}
-                            className="text-teal hover:text-biege"
-                        >
-                            {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </Button>
+                        {!isVisible ? (
+                            <ConfirmDialog
+                                title="Reveal Secret Phrase?"
+                                description="Make sure nobody is looking at your screen. These words provide full access to your wallet."
+                                onConfirm={() => setIsVisible(true)}
+                                trigger={
+                                    <Button 
+                                        type="button"
+                                        variant="icon"
+                                        size="icon"
+                                        title={isVisible ? "Hide Seed" : "Show Seed"}
+                                        className="text-teal hover:text-biege"
+                                    >
+                                        <Eye size={20} />
+                                    </Button>
+                                }
+                                allowOutsideClick
+                            />
+                        ) : (
+                            <Button 
+                                type="button"
+                                variant="icon"
+                                size="icon"
+                                onClick={() => setIsVisible(!isVisible)}
+                                title={isVisible ? "Hide Seed" : "Show Seed"}
+                                className="text-teal hover:text-biege"
+                            >
+                                <EyeOff size={20} />
+                            </Button>
+                        )}
                         {isValid && (
                             <Button 
                                 type="button"
