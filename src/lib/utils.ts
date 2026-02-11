@@ -9,6 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 export function copyToClipBoard(text: string){
     navigator.clipboard.writeText(text);
     toast.info('Copied successfully',{
+        // className: "!bg-navy-900 !border !border-teal !text-biege !font-bold ",
+        progressClassName: "!bg-teal",
         position: "bottom-right",
         autoClose: 1500,
         hideProgressBar: false,
@@ -16,6 +18,6 @@ export function copyToClipBoard(text: string){
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored",
+        theme: "dark",
     });
 }
