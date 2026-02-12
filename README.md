@@ -1,28 +1,29 @@
-#Preview
+# Preview
 
 ## add password
-<img width="923" height="529" alt="image" src="https://github.com/user-attachments/assets/44e20d2f-a18d-4388-a233-302fe9fa5046" />
-## generate or import seed
-<img width="907" height="532" alt="image" src="https://github.com/user-attachments/assets/2fc77648-229e-4c43-ab86-c80a6712ff85" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/44e20d2f-a18d-4388-a233-302fe9fa5046" /> 
 
-<img width="921" height="537" alt="image" src="https://github.com/user-attachments/assets/77a89f0d-9734-4270-9826-b0bab135f783" />
+## generate or import seed
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/2fc77648-229e-4c43-ab86-c80a6712ff85" />
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/77a89f0d-9734-4270-9826-b0bab135f783" />
 
 ## confirmation before showing sensitive info:
-<img width="924" height="531" alt="image" src="https://github.com/user-attachments/assets/a3f3be2d-afc5-4c61-8770-f64b0511a776" />
-<img width="910" height="532" alt="image" src="https://github.com/user-attachments/assets/e6c582f4-6ad0-4a0e-8bb1-a18bd1ac0459" />
-<img width="918" height="529" alt="image" src="https://github.com/user-attachments/assets/22f0e087-40aa-4867-ba51-c0c83fc464e8" />
-<img width="925" height="533" alt="image" src="https://github.com/user-attachments/assets/8a445227-24e1-4003-b6e7-563ba5316786" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/a3f3be2d-afc5-4c61-8770-f64b0511a776" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/e6c582f4-6ad0-4a0e-8bb1-a18bd1ac0459" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/22f0e087-40aa-4867-ba51-c0c83fc464e8" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/8a445227-24e1-4003-b6e7-563ba5316786" />
 
 ## click to copy: 
-<img width="907" height="531" alt="image" src="https://github.com/user-attachments/assets/5499fc51-714f-4a37-90d2-1be81ce6f71d" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/5499fc51-714f-4a37-90d2-1be81ce6f71d" />
 
 ## delete wallet confirmation:
-<img width="925" height="534" alt="image" src="https://github.com/user-attachments/assets/89179b5e-26e4-48b5-ad78-cba31ccddc43" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/89179b5e-26e4-48b5-ad78-cba31ccddc43" />
 
 
 All the information is stored locally for persistence.
 ## Used crypto.subtle to handle encryption and decryption using browser's native crypto capabilities.
-<img width="921" height="533" alt="image" src="https://github.com/user-attachments/assets/219e399a-0010-47cc-afe1-2dba3b0509fc" />
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/219e399a-0010-47cc-afe1-2dba3b0509fc" />
 
 
 
