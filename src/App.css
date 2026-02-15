@@ -1,47 +1,119 @@
 @import "tailwindcss";
 
 @theme {
-    /* Semantic Color Names */
-    --color-bg-primary: #0f172a; /* Slate 900 - Deep Background */
-    --color-bg-secondary: #1e293b; /* Slate 800 - Card Background */
-    --color-bg-tertiary: #334155; /* Slate 700 - Hover State */
-    
-    --color-text-primary: #f8fafc; /* Slate 50 - Main Text */
-    --color-text-secondary: #94a3b8; /* Slate 400 - Subtitles */
-    --color-text-accent: #38bdf8; /* Sky 400 - Primary Brand Color */
-    
-    --color-border-primary: #1e293b; 
-    --color-border-accent: #38bdf8;
-    
-    --color-button-primary: #38bdf8;
-    --color-button-primary-hover: #0ea5e9;
-    --color-button-text: #0f172a;
+  /* Semantic Color Names */
+  --color-bg-primary: #0f172a;
+  /* Slate 900 - Deep Background */
+  --color-bg-secondary: #1e293b;
+  /* Slate 800 - Card Background */
+  --color-bg-tertiary: #334155;
+  /* Slate 700 - Hover State */
 
+  --color-text-primary: #f8fafc;
+  /* Slate 50 - Main Text */
+  --color-text-secondary: #94a3b8;
+  /* Slate 400 - Subtitles */
+  --color-text-accent: #38bdf8;
+  /* Sky 400 - Primary Brand Color */
+
+  --color-border-primary: #1e293b;
+  --color-border-accent: #38bdf8;
+  --color-border-card: rgba(255, 255, 255, 0.1);
+
+  --color-button-primary: #38bdf8;
+  --color-button-primary-hover: #0ea5e9;
+  --color-button-text: #0f172a;
+
+  --color-error: #ef4444;
+  --color-success: #22c55e;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.5s ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+
+  :root[data-theme='classic'] {
+
+    /* Backgrounds */
+    --color-bg-primary: #213448;
+    /* Deep Navy */
+    --color-bg-secondary: #547792;
+    /* Navy Card */
+    --color-bg-tertiary: #73cde8;
+    /* Tealish Background */
+
+    /* Text */
+    --color-text-primary: #ffffff;
+    /* White Text */
+    --color-text-secondary: #cbd5e1;
+    /* Slate 300 - lighter for contrast */
+    --color-text-accent: #94B4C1;
+    /* teal */
+
+    /* Borders */
+    --color-border-primary: #233554;
+    /* Navy Border */
+    --color-border-accent: #547792;
+    /* Teal Border */
+    --color-border-card: #f1f5f9;
+    /* Almost White Border */
+
+    /* Buttons */
+    --color-button-primary: #EAE0CF;
+    /* beige button */
+    --color-button-primary-hover: #d8cdb9;
+    /* slightly darker beige */
+    --color-button-text: #213448;
+    /* navy text */
+
+    /* States */
     --color-error: #ef4444;
-    --color-success: #22c55e;
-    
-    /* Animations */
-    --animate-fade-in: fade-in 0.5s ease-out;
-    --animate-slide-up: slide-up 0.5s ease-out;
-    
-    @keyframes fade-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes slide-up {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
+    /* Standard Red */
+    --color-success: #64ffda;
+  }
+
 }
 
 /* Global Utilities */
+:root[data-theme='classic'] .global-glow {
+  opacity: 0;
+}
+
+/* Thicker border for classic theme */
+:root[data-theme='classic'] .border-border-card {
+  border-width: 2px !important;
+}
+
 .glass-panel {
-    @apply bg-bg-secondary/50 backdrop-blur-xl border border-white/10 shadow-xl;
+  @apply bg-bg-secondary/50 backdrop-blur-xl border border-border-card shadow-xl;
 }
 
 .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-text-accent to-purple-400;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-text-accent to-purple-400;
 }
 
 .my-icon {

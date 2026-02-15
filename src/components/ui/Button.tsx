@@ -13,8 +13,8 @@ export const Button = ({ children, variant = "primary", size = "sm", icon, class
     );
     const variants = {
         primary: "bg-button-primary text-button-text hover:bg-button-primary-hover shadow-lg shadow-button-primary/20 hover:shadow-button-primary/40",
-        secondary: "bg-bg-tertiary text-text-primary hover:bg-bg-secondary border border-white/10 hover:border-text-accent/50",
-        danger: "bg-error/10 text-error hover:bg-error/20 border border-error/50",
+        secondary: "bg-bg-tertiary text-text-primary hover:bg-bg-secondary border border-border-card hover:border-text-accent/50",
+        danger: "bg-transparent text-error hover:bg-error/10 border border-error",
         ghost: "bg-transparent text-text-secondary hover:text-text-primary hover:bg-white/5",
         icon: "p-2 hover:bg-white/10 rounded-full"
     }

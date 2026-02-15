@@ -27,7 +27,7 @@ export const DropDownMenu = ({ text, showSeed }: DropDownMenuInterface) => {
         }
     }, [open])
     return (
-        <div className={cn("rounded-xl w-full text-text-primary font-bold transition-all duration-300 overflow-hidden border border-white/10 hover:border-text-accent/30 bg-bg-primary/30")}>
+        <div className={cn("rounded-xl w-full text-text-primary font-bold transition-all duration-300 overflow-hidden border border-border-card hover:border-text-accent/30 bg-bg-primary/30")}>
             {!open ? (
                 <ConfirmDialog
                     title="Reveal Secret Phrase?"
@@ -46,7 +46,7 @@ export const DropDownMenu = ({ text, showSeed }: DropDownMenuInterface) => {
             ) : (
                 <div
                     onClick={() => setOpen(false)}
-                    className={cn("text-xl md:text-2xl flex justify-between items-center py-6 px-8 cursor-pointer bg-white/5 hover:bg-white/10 transition-colors border-b border-white/5")}
+                    className={cn("text-xl md:text-2xl flex justify-between items-center py-6 px-8 cursor-pointer bg-white/5 hover:bg-white/10 transition-colors border-b border-border-card")}
                 >
                     <p className="tracking-tight text-text-accent">{text}</p>
                     <Button variant="ghost" size="icon" className="text-text-accent">
@@ -72,7 +72,7 @@ const Note = () => {
     </div>
 }
 const Item = ({ children }: { children: React.ReactNode }) => {
-    return <div className="flex items-center justify-center px-4 py-3 w-full rounded-lg font-mono text-sm sm:text-base bg-bg-secondary/50 border border-white/5 hover:border-text-accent/50 hover:bg-bg-secondary transition-all text-text-primary select-all">
+    return <div className="flex items-center justify-center px-4 py-3 w-full rounded-lg font-mono text-sm sm:text-base bg-bg-secondary/50 border border-border-card hover:border-text-accent/50 hover:bg-bg-secondary transition-all text-text-primary select-all">
         {children}
     </div>
 }

@@ -41,7 +41,7 @@ export const WalletEntryGate = () => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <input
                 type="password"
-                className="p-4 rounded-xl bg-bg-primary/50 text-text-primary outline-none border border-white/10 focus:border-text-accent focus:ring-1 focus:ring-text-accent transition-all placeholder:text-text-secondary/50"
+                className="p-4 rounded-xl bg-bg-primary/50 text-text-primary outline-none border border-border-card focus:border-text-accent focus:ring-1 focus:ring-text-accent transition-all placeholder:text-text-secondary/50"
                 placeholder="Enter Master Password"
                 ref={passwordRef}
                 autoFocus

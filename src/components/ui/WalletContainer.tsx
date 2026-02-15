@@ -12,23 +12,23 @@ interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> 
 
 export const WalletContainer = ({ className, publicKey, getPrivateKey, index, ...props }: WalletContainerInterface) => {
     return (
-        <div {...props} className={cn("border border-white/10 w-full rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300 shadow-lg", className)}>
+        <div {...props} className={cn("border border-border-card w-full rounded-2xl overflow-hidden hover:border-text-accent/30 transition-all duration-300 shadow-lg", className)}>
             <div className="flex justify-between items-center mx-8 my-6">
                 <p className="text-3xl font-bold text-text-primary tracking-tight">Wallet {index + 1}</p>
                 <div className="px-3 py-1 rounded-full bg-text-accent/10 border border-text-accent/20 text-text-accent text-xs font-mono">
                     SOLANA
                 </div>
             </div>
-            <div className="py-6 px-8 gap-y-6 flex flex-col bg-bg-secondary/50 backdrop-blur-sm">
+            <div className="py-6 px-8 gap-y-6 flex flex-col bg-bg-tertiary/30 backdrop-blur-sm">
                 <KeyDisplay keyType="Public Key" keyVal={publicKey} />
-                <div className="h-px w-full bg-white/5" />
+                <div className="h-px w-full bg-border-card" />
                 <KeyDisplay
                     keyType="Private Key"
                     isPrivate={true}
                     fetchKey={getPrivateKey}
                 />
             </div>
-            <div className="bg-bg-primary/50 py-2 px-8 flex items-center gap-2 text-text-secondary border-t border-white/5">
+            <div className="bg-bg-primary/50 py-2 px-8 flex items-center gap-2 text-text-secondary border-t border-border-card">
                 <Asterisk size={12} className="opacity-50" />
                 <p className="text-xs font-medium opacity-50">Click on any key to copy it to clipboard</p>
             </div>
@@ -76,7 +76,7 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
                         value={visible ? currentKey : "••••••••••••••••••••••••••••••••"}
                         readOnly
                         className={cn(
-                            "w-full bg-bg-primary/50 text-text-primary border border-white/5 rounded-lg p-3 font-mono text-sm truncate transition-all",
+                            "w-full bg-bg-primary/50 text-text-primary border border-border-card rounded-lg p-3 font-mono text-sm truncate transition-all",
                             "group-hover/input:border-text-accent/50 group-hover/input:bg-bg-primary/80 outline-none",
                             !visible && "tracking-[0.2em] text-text-secondary"
                         )}

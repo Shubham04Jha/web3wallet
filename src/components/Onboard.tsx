@@ -31,7 +31,7 @@ export const Onboard = () => {
     return (
         <div className="flex justify-center w-full mb-8 animate-[slide-up_0.5s_ease-out]">
             <Tabs.Root value={step} className="w-full max-w-lg glass-panel rounded-2xl p-8">
-                <Tabs.List className="flex gap-2 justify-around mb-8 border-b border-white/10 pb-2">
+                <Tabs.List className="flex gap-2 justify-around mb-8 border-b border-border-card pb-2">
                     <Tabs.Trigger
                         value="1"
                         disabled={step !== '1'}
@@ -66,7 +66,6 @@ export const Onboard = () => {
 const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, password: string }) => {
     const [pwd, setPwd] = useState(password);
     const [confirmPwd, setConfirmPwd] = useState(password);
-    const [showPassword, setShowPassword] = useState(false);
 
     const isLengthValid = pwd.length >= 4;
     const isMatching = pwd === confirmPwd && confirmPwd.length > 0;
@@ -83,9 +82,9 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
                 {/* Primary Password Input */}
                 <div className="relative">
                     <input
-                        type={showPassword ? "text" : "password"}
+                        type="password"
                         placeholder="Enter password (min 4 chars)"
-                        className="w-full p-4 pr-10 rounded-xl bg-bg-primary/50 text-text-primary border border-white/10 focus:border-text-accent focus:ring-1 focus:ring-text-accent outline-none transition-all placeholder:text-text-secondary/50"
+                        className="w-full p-4 pr-10 rounded-xl bg-bg-primary/50 text-text-primary border border-border-card focus:border-text-accent focus:ring-1 focus:ring-text-accent outline-none transition-all placeholder:text-text-secondary/50"
                         value={pwd}
                         onChange={(e) => setPwd(e.target.value)}
                     />
@@ -94,9 +93,9 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
                 {/* Confirm Password Input */}
                 <div className="relative">
                     <input
-                        type={showPassword ? "text" : "password"}
+                        type="password"
                         placeholder="Confirm password"
-                        className={`w-full p-4 rounded-xl bg-bg-primary/50 text-text-primary border outline-none transition-all placeholder:text-text-secondary/50 ${confirmPwd.length > 0 && !isMatching ? 'border-error ring-1 ring-error' : 'border-white/10 focus:border-text-accent focus:ring-1 focus:ring-text-accent'
+                        className={`w-full p-4 rounded-xl bg-bg-primary/50 text-text-primary border outline-none transition-all placeholder:text-text-secondary/50 ${confirmPwd.length > 0 && !isMatching ? 'border-error ring-1 ring-error' : 'border-border-card focus:border-text-accent focus:ring-1 focus:ring-text-accent'
                             }`}
                         value={confirmPwd}
                         onChange={(e) => setConfirmPwd(e.target.value)}
@@ -171,7 +170,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                         readOnly
                         className={cn(
                             "bg-bg-primary/80 text-text-primary pointer-events-none",
-                            "w-full h-48 p-4 pr-12 rounded-xl border border-white/10 resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                            "w-full h-48 p-4 pr-12 rounded-xl border border-border-card resize-none leading-relaxed font-mono select-none selection:bg-transparent"
                         )}
                     />
                     {seed && (

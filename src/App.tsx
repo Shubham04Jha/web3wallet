@@ -5,11 +5,12 @@ import { Onboard } from './components/Onboard';
 import { WalletEntryGate } from './components/WalletEntryGate';
 import { ToastContainer } from 'react-toastify';
 import { WalletProvider } from './context/WalletContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   const hasWallet = !!localStorage.getItem('walletStore');
   return (
-    <>
+    <ThemeProvider>
       <WalletProvider>
         <BrowserRouter>
           <Layout>
@@ -36,7 +37,7 @@ function App() {
           theme="colored"
         />
       </WalletProvider>
-    </>
+    </ThemeProvider>
   )
 }
 
