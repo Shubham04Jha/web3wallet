@@ -12,21 +12,25 @@ interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> 
 
 export const WalletContainer = ({ className, publicKey, getPrivateKey, index, ...props }: WalletContainerInterface) => {
     return (
-        <div {...props} className={cn("border border-white w-full rounded-xl overflow-hidden", className)}>
-            <div className="flex justify-between items-center mx-8 my-4">
-                <p className="text-4xl font-bold">Wallet {index + 1}</p>
-            </div>
-            <div className="py-4 px-8 gap-y-4 flex flex-col bg-navy-400">
-                <KeyDisplay keyType="Public Key" keyVal={publicKey} />
-                <KeyDisplay 
-                    keyType="Private Key" 
-                    isPrivate={true} 
-                    fetchKey={getPrivateKey} 
-                />
-                <div className="flex items-center text-gray-900 gap-1">
-                    <Asterisk size={14} />
-                    <p className="text-sm">Click on key to copy</p>
+        <div {...props} className={cn("border border-white/10 w-full rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300 shadow-lg", className)}>
+            <div className="flex justify-between items-center mx-8 my-6">
+                <p className="text-3xl font-bold text-text-primary tracking-tight">Wallet {index + 1}</p>
+                <div className="px-3 py-1 rounded-full bg-text-accent/10 border border-text-accent/20 text-text-accent text-xs font-mono">
+                    SOLANA
                 </div>
+            </div>
+            <div className="py-6 px-8 gap-y-6 flex flex-col bg-bg-secondary/50 backdrop-blur-sm">
+                <KeyDisplay keyType="Public Key" keyVal={publicKey} />
+                <div className="h-px w-full bg-white/5" />
+                <KeyDisplay
+                    keyType="Private Key"
+                    isPrivate={true}
+                    fetchKey={getPrivateKey}
+                />
+            </div>
+            <div className="bg-bg-primary/50 py-2 px-8 flex items-center gap-2 text-text-secondary border-t border-white/5">
+                <Asterisk size={12} className="opacity-50" />
+                <p className="text-xs font-medium opacity-50">Click on any key to copy it to clipboard</p>
             </div>
         </div>
     );
@@ -55,58 +59,63 @@ const KeyDisplay = ({ keyVal: initialKeyVal, keyType, isPrivate = false, fetchKe
     };
 
     const onCopy = () => {
-        if (!visible ) return; // Prevent copying masked text
+        if (!visible) return; // Prevent copying masked text
         copyToClipBoard(currentKey);
     };
 
     return (
-        <div className="w-full">
-            <p className="font-medium text-xl text-biege hover:cursor-default">{keyType}</p>
-            <div className="flex justify-between items-center w-full gap-2 mt-1">
-                <input
-                    type={visible ? "text" : "password"}
-                    value={visible ? currentKey : "••••••••••••••••••••••••••••••••"}
-                    readOnly
+        <div className="w-full group">
+            <p className="font-medium text-sm text-text-secondary uppercase tracking-wider mb-2">{keyType}</p>
+            <div className="flex justify-between items-center w-full gap-4">
+                <div
                     onClick={onCopy}
-                    className={cn(
-                        "bg-transparent text-gray-900 transition-colors hover:cursor-pointer hover:text-white",
-                        "w-full border-none outline-none rounded-md focus:text-white font-mono text-sm truncate",
-                        !visible && "tracking-widest"
-                    )}
-                />
+                    className="relative grow cursor-pointer group/input"
+                >
+                    <input
+                        type={visible ? "text" : "password"}
+                        value={visible ? currentKey : "••••••••••••••••••••••••••••••••"}
+                        readOnly
+                        className={cn(
+                            "w-full bg-bg-primary/50 text-text-primary border border-white/5 rounded-lg p-3 font-mono text-sm truncate transition-all",
+                            "group-hover/input:border-text-accent/50 group-hover/input:bg-bg-primary/80 outline-none",
+                            !visible && "tracking-[0.2em] text-text-secondary"
+                        )}
+                    />
+                </div>
+
                 {isPrivate && (
-                    visible?<Button
-                        className="hover:bg-navy-900" 
-                        variant="icon" 
-                        size="icon" 
+                    visible ? <Button
+                        className="hover:bg-white/10 text-text-secondary hover:text-text-primary"
+                        variant="icon"
+                        size="icon"
                         onClick={toggleVisibility}
                         disabled={loading}>
-                           {loading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                            ) : 
-                                <Eye size={16} />
-                            } 
-                    </Button>:
-                    <ConfirmDialog
-                    title="Reveal Private Key?"
-                    description="WARNING: This key provides full control over your funds associated with that key. Ensure nobody is watching your screen and you are not sharing your window before proceeding."
-                    onConfirm={toggleVisibility}
-                    trigger={
-                        <Button 
-                            className="hover:bg-navy-900" 
-                            variant="icon" 
-                            size="icon" 
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                            ) : 
-                                <EyeOff size={16} />
+                        {loading ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-accent" />
+                        ) :
+                            <Eye size={18} />
+                        }
+                    </Button> :
+                        <ConfirmDialog
+                            title="Reveal Private Key?"
+                            description="WARNING: This key provides full control over your funds associated with that key. Ensure nobody is watching your screen and you are not sharing your window before proceeding."
+                            onConfirm={toggleVisibility}
+                            trigger={
+                                <Button
+                                    className="hover:bg-white/10 text-text-secondary hover:text-text-primary"
+                                    variant="icon"
+                                    size="icon"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-accent" />
+                                    ) :
+                                        <EyeOff size={18} />
+                                    }
+                                </Button>
                             }
-                        </Button>
-                    }
-                    allowOutsideClick
-                    />
+                            allowOutsideClick
+                        />
                 )}
             </div>
         </div>

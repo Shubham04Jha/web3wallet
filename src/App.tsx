@@ -3,37 +3,39 @@ import './App.css';
 import { Layout } from './components/Layout';
 import { Onboard } from './components/Onboard';
 import { WalletEntryGate } from './components/WalletEntryGate';
-import {ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { WalletProvider } from './context/WalletContext';
 
 function App() {
   const hasWallet = !!localStorage.getItem('walletStore');
   return (
     <>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route 
-              path="/" 
-              element={hasWallet ? <Navigate to="/wallet" /> : <Navigate to="/get-started" />} 
-            />
-            <Route path='/wallet' element={<WalletEntryGate/>}/>
-            <Route path='/get-started' element={<Onboard/>} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-      <ToastContainer
-      
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <WalletProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route
+                path="/"
+                element={hasWallet ? <Navigate to="/wallet" /> : <Navigate to="/get-started" />}
+              />
+              <Route path='/wallet' element={<WalletEntryGate />} />
+              <Route path='/get-started' element={<Onboard />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+      </WalletProvider>
     </>
   )
 }

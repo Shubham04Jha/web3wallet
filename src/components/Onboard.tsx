@@ -1,7 +1,7 @@
 import { Tabs } from "radix-ui"
-import { useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/Button";
-import { resetWallet } from "../hooks/useCrypto";
+import { useCrypto } from "../hooks/useCrypto";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye, Copy } from "lucide-react";
 import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
@@ -12,6 +12,7 @@ export const Onboard = () => {
     const [step, setStep] = useState<string>('1');
     const passwordRef = useRef<string>('');
     const navigate = useNavigate();
+    const { resetWallet } = useCrypto();
 
     const handlePasswordComplete = (pwd: string) => {
         passwordRef.current = pwd;
@@ -28,33 +29,33 @@ export const Onboard = () => {
     };
 
     return (
-        <div className="flex justify-center w-full mb-8">
-            <Tabs.Root value={step} className="w-full max-w-lg bg-navy-900 border border-navy-400 rounded-xl p-8 shadow-2xl">
-                <Tabs.List className="flex gap-2 justify-around mb-2 border-b border-navy-400 pb-2">
-                    <Tabs.Trigger 
-                        value="1" 
+        <div className="flex justify-center w-full mb-8 animate-[slide-up_0.5s_ease-out]">
+            <Tabs.Root value={step} className="w-full max-w-lg glass-panel rounded-2xl p-8">
+                <Tabs.List className="flex gap-2 justify-around mb-8 border-b border-white/10 pb-2">
+                    <Tabs.Trigger
+                        value="1"
                         disabled={step !== '1'}
-                        className="text-teal data-[state=active]:text-biege data-[state=active]:border-b-2 border-biege px-4 py-2 transition-all cursor-default"
+                        className="text-text-secondary font-medium data-[state=active]:text-text-accent data-[state=active]:border-b-2 border-text-accent px-4 py-2 transition-all cursor-default"
                     >
                         1. Password
                     </Tabs.Trigger>
-                    <Tabs.Trigger 
-                        value="2" 
+                    <Tabs.Trigger
+                        value="2"
                         disabled={step !== '2'}
-                        className="text-teal data-[state=active]:text-biege data-[state=active]:border-b-2 border-biege px-4 py-2 transition-all cursor-default"
+                        className="text-text-secondary font-medium data-[state=active]:text-text-accent data-[state=active]:border-b-2 border-text-accent px-4 py-2 transition-all cursor-default"
                     >
                         2. Seed Phrase
                     </Tabs.Trigger>
                 </Tabs.List>
 
-                <Tabs.Content value="1">
-                    <PasswordStep onNext={handlePasswordComplete} password={passwordRef.current}/>
+                <Tabs.Content value="1" className="outline-none">
+                    <PasswordStep onNext={handlePasswordComplete} password={passwordRef.current} />
                 </Tabs.Content>
 
-                <Tabs.Content value="2">
-                    <SeedStep 
-                        onBack={() => setStep('1')} 
-                        onComplete={handleOnboardingComplete} 
+                <Tabs.Content value="2" className="outline-none">
+                    <SeedStep
+                        onBack={() => setStep('1')}
+                        onComplete={handleOnboardingComplete}
                     />
                 </Tabs.Content>
             </Tabs.Root>
@@ -73,55 +74,47 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="space-y-2">
-                <h2 className="text-biege text-2xl font-bold">Set a Password</h2>
-                <p className="text-teal text-sm">This password will unlock your wallet on this device only.</p>
+            <div className="space-y-2 text-center">
+                <h2 className="text-text-primary text-2xl font-bold">Set a Password</h2>
+                <p className="text-text-secondary text-sm">This password will unlock your wallet on this device only.</p>
             </div>
-            
+
             <div className="space-y-4">
                 {/* Primary Password Input */}
                 <div className="relative">
-                    <input 
-                        type={showPassword ? "text" : "password"} 
+                    <input
+                        type={showPassword ? "text" : "password"}
                         placeholder="Enter password (min 4 chars)"
-                        className="w-full p-3 pr-10 rounded-md bg-navy-400 text-white border border-transparent focus:border-teal outline-none transition-all"
+                        className="w-full p-4 pr-10 rounded-xl bg-bg-primary/50 text-text-primary border border-white/10 focus:border-text-accent focus:ring-1 focus:ring-text-accent outline-none transition-all placeholder:text-text-secondary/50"
                         value={pwd}
                         onChange={(e) => setPwd(e.target.value)}
                     />
-                    <button 
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-teal hover:text-biege transition-colors"
-                    >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
                 </div>
 
                 {/* Confirm Password Input */}
                 <div className="relative">
-                    <input 
-                        type={showPassword ? "text" : "password"} 
+                    <input
+                        type={showPassword ? "text" : "password"}
                         placeholder="Confirm password"
-                        className={`w-full p-3 rounded-md bg-navy-400 text-white border outline-none transition-all ${
-                            confirmPwd.length > 0 && !isMatching ? 'border-red-500' : 'border-transparent focus:border-teal'
-                        }`}
+                        className={`w-full p-4 rounded-xl bg-bg-primary/50 text-text-primary border outline-none transition-all placeholder:text-text-secondary/50 ${confirmPwd.length > 0 && !isMatching ? 'border-error ring-1 ring-error' : 'border-white/10 focus:border-text-accent focus:ring-1 focus:ring-text-accent'
+                            }`}
                         value={confirmPwd}
                         onChange={(e) => setConfirmPwd(e.target.value)}
                     />
                 </div>
-                
+
                 {confirmPwd.length > 0 && !isMatching && (
-                    <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+                    <p className="text-error text-xs mt-1 ml-1">Passwords do not match</p>
                 )}
             </div>
 
-            <Button 
-                disabled={!isValid} 
-                onClick={() => onNext(pwd)} 
-                className="w-full"
+            <Button
+                disabled={!isValid}
+                onClick={() => onNext(pwd)}
+                className="w-full mt-2"
                 size="lg"
             >
-                Continue to Seed
+                Continue
             </Button>
         </div>
     );
@@ -131,10 +124,10 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
 const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (seed: string) => void }) => {
     const [seed, setSeed] = useState("");
     const [isVisible, setIsVisible] = useState(false);
-    const [isValid,setIsValid] = useState<boolean>(isValidSeedPhrase(seed));
-    useEffect(()=>{
+    const [isValid, setIsValid] = useState<boolean>(isValidSeedPhrase(seed));
+    useEffect(() => {
         setIsValid(isValidSeedPhrase(seed));
-    },[seed])
+    }, [seed])
     const handleGenerate = () => {
         const mnemonic = getNewSeedPhrase();
         setSeed(mnemonic);
@@ -149,82 +142,89 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="space-y-2">
-                <h2 className="text-biege text-2xl font-bold">Secret Recovery Phrase</h2>
-                <p className="text-teal text-sm">Save these words securely. They are the only way to recover your wallet.</p>
+            <div className="space-y-2 text-center">
+                <h2 className="text-text-primary text-2xl font-bold">Secret Recovery Phrase</h2>
+                <p className="text-text-secondary text-sm">Save these words securely. They are the only way to recover your wallet.</p>
             </div>
 
-            <div className="relative">
-                {/* REAL INPUT (receives typing) */}
-                <textarea
-                    placeholder="Paste your seed phrase here or generate a new one..."
-                    className={cn(
-                        "absolute inset-0 caret-white focus:border-teal outline-none bg-transparent text-transparent",
-                        "w-full h-48 p-4 pr-12 rounded-md border border-transparent resize-none leading-relaxed font-mono select-none selection:bg-transparent"
-                    )}
-                    maxLength={200}
-                    value={seed}
-                    onChange={(e) => setSeed(e.target.value)}
-                />
+            <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-text-accent to-purple-600 rounded-xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
+                <div className="relative">
+                    {/* REAL INPUT (receives typing) */}
+                    <textarea
+                        placeholder="Paste your seed phrase here or generate a new one..."
+                        className={cn(
+                            "absolute inset-0 caret-text-accent focus:border-text-accent outline-none bg-transparent text-transparent z-10",
+                            "w-full h-48 p-4 pr-12 rounded-xl resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                        )}
+                        maxLength={200}
+                        value={seed}
+                        onChange={(e) => setSeed(e.target.value)}
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                    />
 
-                {/* DISPLAY LAYER */}
-                <textarea
-                    value={isVisible ? seed : getMaskedSeed()}
-                    readOnly
-                    className={cn(
-                        "bg-navy-400 text-white pointer-events-none",
-                        "w-full h-48 p-4 pr-12 rounded-md border border-transparent resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                    {/* DISPLAY LAYER */}
+                    <textarea
+                        value={isVisible ? seed : getMaskedSeed()}
+                        readOnly
+                        className={cn(
+                            "bg-bg-primary/80 text-text-primary pointer-events-none",
+                            "w-full h-48 p-4 pr-12 rounded-xl border border-white/10 resize-none leading-relaxed font-mono select-none selection:bg-transparent"
+                        )}
+                    />
+                    {seed && (
+                        <div className="absolute right-2 top-2 z-20 flex flex-col gap-1">
+                            {!isVisible ? (
+                                <ConfirmDialog
+                                    title="Reveal Secret Phrase?"
+                                    description="Make sure nobody is looking at your screen. These words provide full access to your wallet."
+                                    onConfirm={() => {
+                                        setIsVisible(true)
+                                    }}
+                                    trigger={
+                                        <Button
+                                            type="button"
+                                            variant="icon"
+                                            size="icon"
+                                            title="Show Seed"
+                                            className="text-text-secondary hover:text-text-primary"
+                                        >
+                                            <Eye size={18} />
+                                        </Button>
+                                    }
+                                    allowOutsideClick
+                                />
+                            ) : (
+                                <Button
+                                    type="button"
+                                    variant="icon"
+                                    size="icon"
+                                    onClick={() => setIsVisible(!isVisible)}
+                                    title="Hide Seed"
+                                    className="text-text-secondary hover:text-text-primary"
+                                >
+                                    <EyeOff size={18} />
+                                </Button>
+                            )}
+                            {isValid && (
+                                <Button
+                                    type="button"
+                                    variant="icon"
+                                    size="icon"
+                                    onClick={() => {
+                                        copyToClipBoard(seed);
+                                    }}
+                                    title="Copy to Clipboard"
+                                    className="text-text-secondary hover:text-text-primary"
+                                >
+                                    <Copy size={18} />
+                                </Button>
+                            )}
+                        </div>
                     )}
-                />
-                {seed && (
-                    <div className="absolute right-1 top-0">
-                        {!isVisible? (
-                            <ConfirmDialog
-                                title="Reveal Secret Phrase?"
-                                description="Make sure nobody is looking at your screen. These words provide full access to your wallet."
-                                onConfirm={() =>{ 
-                                    setIsVisible(true)}}
-                                trigger={
-                                    <Button 
-                                        type="button"
-                                        variant="icon"
-                                        size="icon"
-                                        title={isVisible ? "Hide Seed" : "Show Seed"}
-                                        className="text-teal hover:text-biege"
-                                    >
-                                        <Eye size={20} />
-                                    </Button>
-                                }
-                                allowOutsideClick
-                            />
-                        ) : (
-                            <Button 
-                                type="button"
-                                variant="icon"
-                                size="icon"
-                                onClick={() => setIsVisible(!isVisible)}
-                                title={isVisible ? "Hide Seed" : "Show Seed"}
-                                className="text-teal hover:text-biege"
-                            >
-                                <EyeOff size={20} />
-                            </Button>
-                        )}
-                        {isValid && (
-                            <Button 
-                                type="button"
-                                variant="icon"
-                                size="icon"
-                                onClick={() => {
-                                    copyToClipBoard(seed);
-                                }}
-                                title="Copy to Clipboard"
-                                className="text-teal hover:text-biege"
-                            >
-                                <Copy size={20} />
-                            </Button>
-                        )}
-                    </div>
-                )}
+                </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -236,9 +236,9 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                 </Button>
             </div>
 
-            <Button 
-                disabled={!isValid} 
-                onClick={() => onComplete(seed)} 
+            <Button
+                disabled={!isValid}
+                onClick={() => onComplete(seed)}
                 size="lg"
                 className="w-full"
             >

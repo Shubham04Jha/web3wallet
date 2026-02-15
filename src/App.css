@@ -1,30 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-    --color-navy-900: #213448;
-    --color-navy-400: #547792;
-    --color-teal: #94B4C1;
-    --color-teal-900: #6F97A6;
-    --color-biege: #EAE0CF;
-    --color-taupe: #A58F7A;
+    /* Semantic Color Names */
+    --color-bg-primary: #0f172a; /* Slate 900 - Deep Background */
+    --color-bg-secondary: #1e293b; /* Slate 800 - Card Background */
+    --color-bg-tertiary: #334155; /* Slate 700 - Hover State */
+    
+    --color-text-primary: #f8fafc; /* Slate 50 - Main Text */
+    --color-text-secondary: #94a3b8; /* Slate 400 - Subtitles */
+    --color-text-accent: #38bdf8; /* Sky 400 - Primary Brand Color */
+    
+    --color-border-primary: #1e293b; 
+    --color-border-accent: #38bdf8;
+    
+    --color-button-primary: #38bdf8;
+    --color-button-primary-hover: #0ea5e9;
+    --color-button-text: #0f172a;
+
+    --color-error: #ef4444;
+    --color-success: #22c55e;
+    
+    /* Animations */
+    --animate-fade-in: fade-in 0.5s ease-out;
+    --animate-slide-up: slide-up 0.5s ease-out;
+    
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slide-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+}
+
+/* Global Utilities */
+.glass-panel {
+    @apply bg-bg-secondary/50 backdrop-blur-xl border border-white/10 shadow-xl;
+}
+
+.text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-text-accent to-purple-400;
 }
 
 .my-icon {
-  /* Icon size will relative to font-size of .text-wrapper */
   width: 1.2em;
   height: 1.2em;
 }
 
 .text-wrapper {
-  /* Change this! */
   font-size: inherit;
-  /* layout stuff */
   display: flex;
   gap: 0.25em;
   align-items: center;
 }
 
 .masked {
-  -webkit-text-security: disc; /* options: circle, square */
+  -webkit-text-security: disc;
 }
-
