@@ -4,6 +4,7 @@ import { LogOut, Shredder, Moon, Sun } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { ConfirmDialog } from "./ui/ConfirmDialog"
 import { useTheme } from "../context/ThemeContext"
+import { Logo } from "./logo"
 
 export const Header = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export const Header = () => {
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
                 <div className="relative">
                     <div className="absolute inset-0 bg-text-accent/20 blur-xl rounded-full transition-colors" />
-                    <img src="web3walletlogo3.png" className="h-12 w-auto relative z-10" />
+                    <Logo className="relative z-10 h-14"/>
                 </div>
                 <p className="font-bold text-3xl tracking-tight text-gradient transition-all">W3 Wallet</p>
             </div>
