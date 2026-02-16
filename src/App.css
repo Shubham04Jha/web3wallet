@@ -79,7 +79,7 @@
     /* Navy Border */
     --color-border-accent: #547792;
     /* Teal Border */
-    --color-border-card: #f1f5f9;
+    --color-border-card: #547792;
     /* Almost White Border */
 
     /* Buttons */
@@ -105,7 +105,7 @@
 
 /* Thicker border for classic theme */
 :root[data-theme='classic'] .border-border-card {
-  border-width: 2px !important;
+  border-width: 1px !important;
 }
 
 .glass-panel {

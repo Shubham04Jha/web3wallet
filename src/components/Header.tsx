@@ -4,7 +4,7 @@ import { LogOut, Shredder, Moon, Sun } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { ConfirmDialog } from "./ui/ConfirmDialog"
 import { useTheme } from "../context/ThemeContext"
-import { Logo } from "./logo"
+import { Logo } from "./Logo"
 
 export const Header = () => {
     const navigate = useNavigate();
