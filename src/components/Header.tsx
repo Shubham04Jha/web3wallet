@@ -38,7 +38,7 @@ export const Header = () => {
                     className="text-text-secondary hover:text-text-primary mr-2"
                     title={theme === 'modern' ? "Switch to Classic Theme" : "Switch to Modern Theme"}
                 >
-                    {theme === 'modern' ? <Moon size={20} /> : <Sun size={20} />}
+                    {theme === 'modern' ? <Sun size={20} /> : <Moon size={20} />}
                 </Button>
 
                 <Button
