@@ -6,10 +6,23 @@ interface LogoProps {
 
 export const Logo = ({ className }: LogoProps) => {
   return (
-    <img 
-      src="/web_wallet_logo.svg" 
-      alt="W3 Wallet Logo" 
-      className={cn("h-12 w-auto", className)} 
+    <div 
+      className={cn("h-12 w-14", className)} 
+      style={{
+        // Uses the gradient background from your CSS
+        background: "linear-gradient(to right, var(--color-text-accent), #a855f7)", // Matching your text-gradient colors
+        // Projects the image as a mask over that background
+        WebkitMaskImage: "url('/web3faviconv2.svg')",
+        WebkitMaskPosition: "center",
+        // WebkitMaskSize: "180%",
+        WebkitMaskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskImage: "url('/web3faviconv2.svg')",
+        // maskSize: "180%",
+        maskSize: "contain",
+        maskRepeat: "no-repeat",
+        maskPosition: "center"
+      }}
     />
   );
 };

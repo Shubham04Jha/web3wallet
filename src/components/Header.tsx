@@ -25,7 +25,7 @@ export const Header = () => {
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
                 <div className="relative">
                     <div className="absolute inset-0 bg-text-accent/20 blur-xl rounded-full transition-colors" />
-                    <Logo className="relative z-10 h-14"/>
+                    <Logo className="relative z-10 w-18 h-18"/>
                 </div>
                 <p className="font-bold text-3xl tracking-tight text-gradient transition-all">W3 Wallet</p>
             </div>
