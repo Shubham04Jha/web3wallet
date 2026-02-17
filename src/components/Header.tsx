@@ -52,7 +52,7 @@ export const Header = () => {
                 </Button>
                 <ConfirmDialog
                     title="Delete Wallet Permanently?"
-                    description="CRITICAL: This will remove your wallet from this device. You will need your seed phrase to recover your funds."
+                    description="CRITICAL: This will remove your wallet from this device. You will need your recovery phrase to recover your funds."
                     onConfirm={handleForget}
                     trigger={
                         <Button

@@ -3,7 +3,7 @@
 ## add password
 <img height="400" alt="image" src="https://github.com/user-attachments/assets/44e20d2f-a18d-4388-a233-302fe9fa5046" /> 
 
-## generate or import seed
+## generate or import Recovery Phrase
 <img height="400" alt="image" src="https://github.com/user-attachments/assets/2fc77648-229e-4c43-ab86-c80a6712ff85" />
 
 <img height="400" alt="image" src="https://github.com/user-attachments/assets/77a89f0d-9734-4270-9826-b0bab135f783" />
@@ -32,7 +32,7 @@ All the information is stored locally for persistence.
 ## Features
 
 - HD wallet generation using BIP39 mnemonics
-- Seed phrase import or generation
+- Recovery phrase import or generation
 - Password-protected wallet access
 - Encrypted local persistence
 - On-demand private key decryption
@@ -56,7 +56,7 @@ Only encrypted information is persisted in `localStorage`:
 - Initialization Vector (IV)
 - Ciphertext
 
-No seed phrases or private keys are stored in plaintext.
+No Recovery phrases or private keys are stored in plaintext.
 
 ### Memory Handling
 - Crypto keys remain only in memory during session

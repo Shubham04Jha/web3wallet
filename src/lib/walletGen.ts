@@ -4,11 +4,11 @@ import { HDKey } from '@scure/bip32'
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
 
-export const getNewSeedPhrase = () => {
+export const getNewRecoveryPhrase = () => {
   return generateMnemonic(wordlist)
 }
 
-export const isValidSeedPhrase = (mnemonic: string): boolean => {
+export const isValidRecoveryPhrase = (mnemonic: string): boolean => {
   try {
     const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ');
     const res = validateMnemonic(normalized, wordlist);
@@ -32,7 +32,10 @@ export const getSolanaWalletByAccount = async (mnemonic: string, idx: number) =>
   }
 
   const keypair = nacl.sign.keyPair.fromSeed(derived.privateKey)
-
+  // console.log(bs58.encode(derived.privateKey))
+  // console.log(bs58.encode(keypair.secretKey))
+  // console.log(bs58.encode(derived.publicKey));
+  // console.log(bs58.encode(keypair.publicKey))
   return {
     path,
     publicKeyStringB58: bs58.encode(keypair.publicKey),

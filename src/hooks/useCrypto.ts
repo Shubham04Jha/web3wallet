@@ -6,12 +6,12 @@ import { toast } from "react-toastify";
 
 export const useCrypto = () => {
     const {
-        seed,
+        recoveryPhrase,
         salt,
         test,
         wallets,
         resetWalletStore,
-        addSeedToStore: addSeedToStoreCtx,
+        addRecoveryPhraseToStore: addRecoveryPhraseToStoreCtx,
         addWallet: addWalletCtx
     } = useWallet();
 
@@ -19,8 +19,8 @@ export const useCrypto = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const showSeedWords = async () => {
-        return await decryptData(seed);
+    const showRecoveryPhrase = async () => {
+        return await decryptData(recoveryPhrase);
     };
 
     const showPrivateKeyFromIdx = async (idx: number) => {
@@ -33,26 +33,26 @@ export const useCrypto = () => {
         return await decryptData({ cipherEncString: cipheredBase64Key, encIV });
     };
 
-    const resetWallet = async (plainSeed: string, password: string) => {
+    const resetWallet = async (plainRecoveryPhrase: string, password: string) => {
         const saltB64Enc = await resetPassword(password);
         const testString = 'Tested CryptoKey successfully';
         const testData = await encryptData(testString);
         if (!testData) {
             throw new Error('error in encrypting testString');
         }
-        const seedData = await encryptData(plainSeed);
-        if (!seedData) {
-            throw new Error('error in encrypting seedString');
+        const recoveryPhraseData = await encryptData(plainRecoveryPhrase);
+        if (!recoveryPhraseData) {
+            throw new Error('error in encrypting recovery phrase');
         }
-        resetWalletStore(testData, seedData, saltB64Enc);
+        resetWalletStore(testData, recoveryPhraseData, saltB64Enc);
     };
 
-    const encryptAndStoreSeed = async (plainSeed: string) => {
-        const res = await encryptData(plainSeed);
+    const encryptAndStoreRecoveryPhrase = async (plainRecoveryPhrase: string) => {
+        const res = await encryptData(plainRecoveryPhrase);
         if (!res) {
-            throw new Error('Something went wrong while encrypting seed string');
+            throw new Error('Something went wrong while encrypting recovery phrase');
         }
-        addSeedToStoreCtx(res);
+        addRecoveryPhraseToStoreCtx(res);
     };
 
     const encryptAndStoreWallet = async (path: string, publicKey: string, privateKey: string) => {
@@ -99,10 +99,10 @@ export const useCrypto = () => {
         isLogin,
         inputPassword,
         error,
-        showSeedWords,
+        showRecoveryPhrase,
         showPrivateKeyFromIdx,
         resetWallet,
-        encryptAndStoreSeed,
+        encryptAndStoreRecoveryPhrase,
         encryptAndStoreWallet
     }
 }

@@ -6,7 +6,7 @@ import { WalletsDashBoard } from "./WalletsDashBoard";
 import { WalletSkeleton } from "./ui/WalletSkeleton";
 
 export const WalletEntryGate = () => {
-  const { isLogin, inputPassword, isLoading, error, showSeedWords } = useCrypto();
+  const { isLogin, inputPassword, isLoading, error, showRecoveryPhrase } = useCrypto();
   const passwordRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) {
@@ -28,7 +28,7 @@ export const WalletEntryGate = () => {
     <>
       {isLogin ? (
         <>
-          <DropDownMenu showSeed={showSeedWords} text={"Secret Mnemonics"} />
+          <DropDownMenu showRecoveryPhrase={showRecoveryPhrase} text={"Recovery Phrase"} />
           <WalletsDashBoard text='Wallets' />
         </>
       ) : (
@@ -48,7 +48,7 @@ export const WalletEntryGate = () => {
               />
               <Button type="submit" size="lg" className="w-full shadow-lg shadow-button-primary/20">Unlock</Button>
               {error && <p className="text-xs text-error text-center mt-2 italic bg-error/10 p-2 rounded border border-error/20">
-                Wrong password. If you forgot it, you must reset your wallet using your seed phrase.
+                Wrong password. If you forgot it, you must reset your wallet using your Recovery Phrase.
               </p>}
             </form>
           </div>

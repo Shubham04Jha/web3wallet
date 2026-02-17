@@ -4,7 +4,7 @@ import { Button } from "./ui/Button";
 import { useCrypto } from "../hooks/useCrypto";
 import { useNavigate } from "react-router-dom";
 import { EyeOff, Eye, Copy } from "lucide-react";
-import { getNewSeedPhrase, isValidSeedPhrase } from "../lib/walletGen";
+import { getNewRecoveryPhrase, isValidRecoveryPhrase } from "../lib/walletGen";
 import { cn, copyToClipBoard } from "../lib/utils";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 
@@ -19,9 +19,9 @@ export const Onboard = () => {
         setStep('2');
     };
 
-    const handleOnboardingComplete = async (seed: string) => {
+    const handleOnboardingComplete = async (recoveryPhrase: string) => {
         try {
-            await resetWallet(seed, passwordRef.current);
+            await resetWallet(recoveryPhrase, passwordRef.current);
             navigate('/wallet');
         } catch (error) {
             console.error("Failed to initialize wallet", error);
@@ -44,7 +44,7 @@ export const Onboard = () => {
                         disabled={step !== '2'}
                         className="text-text-secondary font-medium data-[state=active]:text-text-accent data-[state=active]:border-b-2 border-text-accent px-4 py-2 transition-all cursor-default"
                     >
-                        2. Seed Phrase
+                        2. Recovery Phrase
                     </Tabs.Trigger>
                 </Tabs.List>
 
@@ -53,7 +53,7 @@ export const Onboard = () => {
                 </Tabs.Content>
 
                 <Tabs.Content value="2" className="outline-none">
-                    <SeedStep
+                    <RecoveryPhraseStep
                         onBack={() => setStep('1')}
                         onComplete={handleOnboardingComplete}
                     />
@@ -120,20 +120,20 @@ const PasswordStep = ({ onNext, password }: { onNext: (pwd: string) => void, pas
 };
 
 
-const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (seed: string) => void }) => {
-    const [seed, setSeed] = useState("");
+const RecoveryPhraseStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (recoveryPhrase: string) => void }) => {
+    const [recoveryPhrase, setRecoveryPhrase] = useState("");
     const [isVisible, setIsVisible] = useState(false);
-    const [isValid, setIsValid] = useState<boolean>(isValidSeedPhrase(seed));
+    const [isValid, setIsValid] = useState<boolean>(isValidRecoveryPhrase(recoveryPhrase));
     useEffect(() => {
-        setIsValid(isValidSeedPhrase(seed));
-    }, [seed])
+        setIsValid(isValidRecoveryPhrase(recoveryPhrase));
+    }, [recoveryPhrase])
     const handleGenerate = () => {
-        const mnemonic = getNewSeedPhrase();
-        setSeed(mnemonic);
+        const mnemonic = getNewRecoveryPhrase();
+        setRecoveryPhrase(mnemonic);
     };
-    const getMaskedSeed = () => {
-        if (!seed) return "";
-        return seed
+    const getMaskedRecoveryPhrase = () => {
+        if (!recoveryPhrase) return "";
+        return recoveryPhrase
             .split(/\s+/) // seperate by space
             .map(word => "•".repeat(word.length)) // "••••" per word
             .join(" ");
@@ -151,14 +151,14 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                 <div className="relative">
                     {/* REAL INPUT (receives typing) */}
                     <textarea
-                        placeholder="Paste your seed phrase here or generate a new one..."
+                        placeholder="Paste your recovery phrase here or generate a new one..."
                         className={cn(
                             "absolute inset-0 caret-text-accent focus:border-text-accent outline-none bg-transparent text-transparent z-10",
                             "w-full h-48 p-4 pr-12 rounded-xl resize-none leading-relaxed font-mono select-none selection:bg-transparent"
                         )}
                         maxLength={200}
-                        value={seed}
-                        onChange={(e) => setSeed(e.target.value)}
+                        value={recoveryPhrase}
+                        onChange={(e) => setRecoveryPhrase(e.target.value)}
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck="false"
@@ -166,14 +166,14 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
 
                     {/* DISPLAY LAYER */}
                     <textarea
-                        value={isVisible ? seed : getMaskedSeed()}
+                        value={isVisible ? recoveryPhrase : getMaskedRecoveryPhrase()}
                         readOnly
                         className={cn(
                             "bg-bg-primary/80 text-text-primary pointer-events-none",
                             "w-full h-48 p-4 pr-12 rounded-xl border border-border-card resize-none leading-relaxed font-mono select-none selection:bg-transparent"
                         )}
                     />
-                    {seed && (
+                    {recoveryPhrase && (
                         <div className="absolute right-2 top-2 z-20 flex flex-col gap-1">
                             {!isVisible ? (
                                 <ConfirmDialog
@@ -187,7 +187,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                                             type="button"
                                             variant="icon"
                                             size="icon"
-                                            title="Show Seed"
+                                            title="Show Recovery Phrase"
                                             className="text-text-secondary hover:text-text-primary"
                                         >
                                             <Eye size={18} />
@@ -201,7 +201,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                                     variant="icon"
                                     size="icon"
                                     onClick={() => setIsVisible(!isVisible)}
-                                    title="Hide Seed"
+                                    title="Hide Recovery Phrase"
                                     className="text-text-secondary hover:text-text-primary"
                                 >
                                     <EyeOff size={18} />
@@ -213,7 +213,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
                                     variant="icon"
                                     size="icon"
                                     onClick={() => {
-                                        copyToClipBoard(seed);
+                                        copyToClipBoard(recoveryPhrase);
                                     }}
                                     title="Copy to Clipboard"
                                     className="text-text-secondary hover:text-text-primary"
@@ -237,7 +237,7 @@ const SeedStep = ({ onBack, onComplete }: { onBack: () => void, onComplete: (see
 
             <Button
                 disabled={!isValid}
-                onClick={() => onComplete(seed)}
+                onClick={() => onComplete(recoveryPhrase)}
                 size="lg"
                 className="w-full"
             >

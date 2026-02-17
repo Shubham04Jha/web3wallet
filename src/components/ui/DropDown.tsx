@@ -6,16 +6,16 @@ import { ConfirmDialog } from "./ConfirmDialog";
 
 interface DropDownMenuInterface {
     text: string,
-    showSeed: () => Promise<string | null>,
+    showRecoveryPhrase: () => Promise<string | null>,
 }
 
-export const DropDownMenu = ({ text, showSeed }: DropDownMenuInterface) => {
+export const DropDownMenu = ({ text, showRecoveryPhrase }: DropDownMenuInterface) => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [items, setItems] = useState<string[]>([]);
     useEffect(() => {
         if (open) {
-            showSeed().then(res => {
+            showRecoveryPhrase().then(res => {
                 if (res) {
                     setItems(res.split(" "));
                 }

@@ -12,18 +12,18 @@ interface WalletsDashBoardInterface {
 
 export const WalletsDashBoard = ({ text }: WalletsDashBoardInterface) => {
     const { wallets, clearWallets } = useWallet();
-    const { showSeedWords, encryptAndStoreWallet, showPrivateKeyFromIdx } = useCrypto(); return <div className={cn("text-text-primary my-8 animate-fade-in")}>
+    const { showRecoveryPhrase, encryptAndStoreWallet, showPrivateKeyFromIdx } = useCrypto(); return <div className={cn("text-text-primary my-8 animate-fade-in")}>
         <div className={cn("flex flex-col md:flex-row gap-y-4 justify-between items-center mb-8")}>
             <p className='font-bold text-4xl tracking-tight text-gradient'>{text}</p>
             <div className={cn("flex gap-4 ")}>
                 <Button icon={<Cog className='my-icon' />}
                     onClick={async () => {
-                        const seed = await showSeedWords();
-                        if (!seed) {
-                            console.log('Seed not found');
+                        const recoveryPhrase = await showRecoveryPhrase();
+                        if (!recoveryPhrase) {
+                            console.log('Recovery Phrase not found');
                             return;
                         }
-                        const keyRes = await getSolanaWalletByAccount(seed, wallets.length);
+                        const keyRes = await getSolanaWalletByAccount(recoveryPhrase, wallets.length);
                         await encryptAndStoreWallet(keyRes.path, keyRes.publicKeyStringB58, keyRes.privateKeyStringB58);
                     }}
                     className="shadow-lg shadow-button-primary/20"

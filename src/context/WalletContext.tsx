@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { CipherData, Wallet } from "../lib/types";
 
 type WalletState = {
-    seed: CipherData;
+    recoveryPhrase: CipherData;
     test: CipherData;
     salt: string;
     wallets: Wallet[];
@@ -14,14 +14,14 @@ type WalletContextType = WalletState & {
     sync: (newState: Partial<WalletState>) => void;
     addWallet: (wallet: Wallet) => void;
     clearWallets: () => void;
-    resetWalletStore: (test: CipherData, seed: CipherData, salt: string) => void;
+    resetWalletStore: (test: CipherData, recoveryPhrase: CipherData, salt: string) => void;
     addTestToStore: (test: CipherData) => void;
-    addSeedToStore: (seed: CipherData) => void;
+    addRecoveryPhraseToStore: (recoveryPhrase: CipherData) => void;
     addSaltToStore: (salt: string) => void;
 };
 
 const defaultState: WalletState = {
-    seed: { encIV: '', cipherEncString: '' },
+    recoveryPhrase: { encIV: '', cipherEncString: '' },
     test: { encIV: '', cipherEncString: '' },
     salt: '',
     wallets: [],
@@ -85,9 +85,9 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         sync({ wallets: [] });
     };
 
-    const resetWalletStore = (test: CipherData, seed: CipherData, salt: string) => {
+    const resetWalletStore = (test: CipherData, recoveryPhrase: CipherData, salt: string) => {
         const newState = {
-            seed,
+            recoveryPhrase,
             test,
             salt,
             wallets: []
@@ -100,8 +100,8 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         sync({ test });
     };
 
-    const addSeedToStore = (seed: CipherData) => {
-        sync({ seed });
+    const addRecoveryPhraseToStore = (recoveryPhrase: CipherData) => {
+        sync({ recoveryPhrase });
     };
 
     const addSaltToStore = (salt: string) => {
@@ -119,7 +119,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
             clearWallets,
             resetWalletStore,
             addTestToStore,
-            addSeedToStore,
+            addRecoveryPhraseToStore,
             addSaltToStore
         }}>
             {children}
