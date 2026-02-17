@@ -52,6 +52,7 @@ export const WalletsDashBoard = ({ text, path }: WalletsDashBoardInterface) => {
             ) : (
                 wallets.map((wallet, idx) =>
                     <WalletContainer
+                        chain={pathToChain(path)}
                         publicKey={wallet.publicKeyString}
                         getPrivateKey={() => showPrivateKeyFromIdx(idx)}
                         index={idx}

@@ -5,18 +5,19 @@ import { useState } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
 
 interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> {
+    chain: string;
     publicKey: string;
     getPrivateKey: () => Promise<string | null>;
     index: number;
 }
 
-export const WalletContainer = ({ className, publicKey, getPrivateKey, index, ...props }: WalletContainerInterface) => {
+export const WalletContainer = ({ className, publicKey, getPrivateKey, index, chain, ...props }: WalletContainerInterface) => {
     return (
         <div {...props} className={cn("border border-border-card w-full rounded-2xl overflow-hidden hover:border-text-accent/30 transition-all duration-300 shadow-lg", className)}>
             <div className="flex justify-between items-center mx-8 my-6">
                 <p className="text-3xl font-bold text-text-primary tracking-tight">Wallet {index + 1}</p>
                 <div className="px-3 py-1 rounded-full bg-text-accent/10 border border-text-accent/20 text-text-accent text-xs font-mono">
-                    SOLANA
+                    {chain}
                 </div>
             </div>
             <div className="py-6 px-8 gap-y-6 flex flex-col bg-bg-tertiary/30 backdrop-blur-sm">
