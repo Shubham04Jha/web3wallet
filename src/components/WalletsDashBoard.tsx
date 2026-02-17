@@ -5,7 +5,7 @@ import { cn } from '../lib/utils'
 import { WalletContainer } from './ui/WalletContainer'
 import { useWallet } from '../context/WalletContext'
 import { useCrypto, useCryptoChain } from '../hooks/useCrypto'
-import { getSolanaWalletByAccount } from '../lib/walletGen'
+import { getSolanaWalletByIdx } from '../lib/walletGen'
 
 import type { PathPrefix } from '../lib/types'
 import { pathToChain } from '../lib/utils'
@@ -32,7 +32,7 @@ export const WalletsDashBoard = ({ text, path }: WalletsDashBoardInterface) => {
                             console.log('Recovery Phrase not found');
                             return;
                         }
-                        const keyRes = await getSolanaWalletByAccount(recoveryPhrase, wallets.length);
+                        const keyRes = await getSolanaWalletByIdx(recoveryPhrase, wallets.length);
                         await encryptAndStoreWallet(keyRes.path, keyRes.publicKeyStringB58, keyRes.privateKeyStringB58);
                     }}
                     className="shadow-lg shadow-button-primary/20"
