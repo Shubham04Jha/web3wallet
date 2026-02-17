@@ -1,6 +1,6 @@
 import { cn } from "../lib/utils"
 import { Button } from "./ui/Button"
-import { LogOut, Shredder, Moon, Sun, GitBranch } from "lucide-react"
+import { LogOut, Shredder, Moon, Sun, GitFork } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { ConfirmDialog } from "./ui/ConfirmDialog"
 import { useTheme } from "../context/ThemeContext"
@@ -71,7 +71,7 @@ export const Header = () => {
                 <Button
                     variant="secondary"
                     size="sm"
-                    icon={<GitBranch size={18} />}
+                    icon={<GitFork size={18} />}
                     onClick={handleGithub}
                     className=""
                 >
