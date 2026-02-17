@@ -1,6 +1,6 @@
 import { cn } from "../lib/utils"
 import { Button } from "./ui/Button"
-import { LogOut, Shredder, Moon, Sun } from "lucide-react"
+import { LogOut, Shredder, Moon, Sun, GitBranch } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { ConfirmDialog } from "./ui/ConfirmDialog"
 import { useTheme } from "../context/ThemeContext"
@@ -18,6 +18,10 @@ export const Header = () => {
         localStorage.clear();
         navigate('/get-started');
         window.location.reload();
+    };
+
+    const handleGithub = () => {
+        window.open('https://github.com/shubham04jha/web3wallet', '_blank');
     };
 
     return (
@@ -64,6 +68,14 @@ export const Header = () => {
                         </Button>
                     }
                 />
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<GitBranch size={18} />}
+                    onClick={handleGithub}
+                    className=""
+                >
+                </Button>
             </div>
         </div>
     )
