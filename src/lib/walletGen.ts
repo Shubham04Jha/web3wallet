@@ -1,28 +1,26 @@
-import { generateMnemonic, mnemonicToSeed as mnemonicToSeedWeb, validateMnemonic } from '@scure/bip39'
-import { wordlist } from '@scure/bip39/wordlists/english.js'
-import { HDKey as WebEtherHDKey } from '@scure/bip32'
-import nacl from 'tweetnacl'
+import type { PathPrefix } from './types';
 import bs58 from 'bs58'
-import {mnemonicToSeed } from 'bip39';
+import { mnemonicToSeed,validateMnemonic, generateMnemonic } from 'bip39';
+import { derivePath } from 'ed25519-hd-key'
 import { Keypair } from '@solana/web3.js'
-import {derivePath} from 'ed25519-hd-key'
-import { deprecate } from 'util';
+import nacl from 'tweetnacl'
+import { Wallet, HDNodeWallet } from "ethers";
 
 export const getNewRecoveryPhrase = () => {
-  return generateMnemonic(wordlist)
+  return generateMnemonic(12)
 }
 
 export const isValidRecoveryPhrase = (mnemonic: string): boolean => {
   try {
     const normalized = mnemonic.trim().toLowerCase().replace(/\s+/g, ' ');
-    const res = validateMnemonic(normalized, wordlist);
+    const res = validateMnemonic(normalized);
     return res;
   } catch {
     return false
   }
 }
 
-export const getSolanaWalletByIdx = async(recoveryPhrase: string, idx: number)=>{
+const getSolanaWalletByIdx = async (recoveryPhrase: string, idx: number) => {
   const normalized = recoveryPhrase.trim().toLowerCase().replace(/\s+/g, ' ');
   const seed = await mnemonicToSeed(normalized);
   const path = `m/44'/501'/${idx}'/0'`
@@ -36,3 +34,28 @@ export const getSolanaWalletByIdx = async(recoveryPhrase: string, idx: number)=>
   }
 }
 
+const getEtheriurmWalletByIdx = async (recoveryPhrase: string, idx: number) => {
+  const normalized = recoveryPhrase.trim().toLowerCase().replace(/\s+/g, ' ');
+  const seed = await mnemonicToSeed(normalized);
+  const path = `m/44'/60'/${idx}'/0'`
+  const hdNode = HDNodeWallet.fromSeed(seed);
+  const child = hdNode.derivePath(path);
+  const wallet = new Wallet(child.privateKey);
+  return {
+    path,
+    publicKeyStringB58: wallet.address,
+    privateKeyStringB58: wallet.privateKey,
+  }
+}
+
+export const getWalletGeneratorByPathPrefix: {
+  [k in PathPrefix]: (recoveryPhrase: string, idx: number)
+    => Promise<{
+      path: string,
+      publicKeyStringB58: string,
+      privateKeyStringB58: string
+    }>
+} = {
+  "m/44'/501'": getSolanaWalletByIdx,
+  "m/44'/60'": getEtheriurmWalletByIdx,
+}
