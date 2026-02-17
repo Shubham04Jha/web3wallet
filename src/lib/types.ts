@@ -14,3 +14,6 @@ export interface CipherData{
 export type DeepReadOnly<T>= 
                             T extends (...args: any)=>any?T:
                             T extends object? { readonly [k in keyof T] : DeepReadOnly<T[k]>}: T
+
+export type PathPrefix = "m/44'/501'"|"m/44'/60'";
+export type ChainName = 'solana'|'ethereum';

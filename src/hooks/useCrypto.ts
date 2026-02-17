@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { decryptData, encryptData, generateCryptoKeyFromPassword, resetPassword } from "../lib/encryptDecrypt";
 import { useWallet } from "../context/WalletContext";
-import type { Wallet } from "../lib/types";
+import type { PathPrefix, Wallet } from "../lib/types";
 import { toast } from "react-toastify";
 
 export const useCrypto = () => {
@@ -9,10 +9,8 @@ export const useCrypto = () => {
         recoveryPhrase,
         salt,
         test,
-        wallets,
         resetWalletStore,
         addRecoveryPhraseToStore: addRecoveryPhraseToStoreCtx,
-        addWallet: addWalletCtx
     } = useWallet();
 
     const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -21,16 +19,6 @@ export const useCrypto = () => {
 
     const showRecoveryPhrase = async () => {
         return await decryptData(recoveryPhrase);
-    };
-
-    const showPrivateKeyFromIdx = async (idx: number) => {
-        if (idx < 0 || idx >= wallets.length) {
-            throw new Error(idx + ' is not a valid index for the ' + (wallets.length + 1) + ' sized wallet array');
-        }
-        const wallet = wallets[idx];
-        const cipheredBase64Key = wallet.cipherPrivateKeyString;
-        const encIV = wallet.encIV;
-        return await decryptData({ cipherEncString: cipheredBase64Key, encIV });
     };
 
     const resetWallet = async (plainRecoveryPhrase: string, password: string) => {
@@ -53,20 +41,6 @@ export const useCrypto = () => {
             throw new Error('Something went wrong while encrypting recovery phrase');
         }
         addRecoveryPhraseToStoreCtx(res);
-    };
-
-    const encryptAndStoreWallet = async (path: string, publicKey: string, privateKey: string) => {
-        const res = await encryptData(privateKey);
-        if (!res) {
-            throw new Error('Something went wrong while encrypting wallet details');
-        }
-        const wallet: Wallet = {
-            path,
-            publicKeyString: publicKey,
-            cipherPrivateKeyString: res.cipherEncString,
-            encIV: res.encIV
-        }
-        addWalletCtx(wallet);
     };
 
     const inputPassword = async (password: string) => {
@@ -100,9 +74,49 @@ export const useCrypto = () => {
         inputPassword,
         error,
         showRecoveryPhrase,
-        showPrivateKeyFromIdx,
         resetWallet,
         encryptAndStoreRecoveryPhrase,
-        encryptAndStoreWallet
+    }
+}
+
+export const useCryptoChain = (pathPrefix: PathPrefix)=>{
+    const {
+        chain,
+        addWallet: addWalletCtx,
+        clearWallets: clearWalletsCtx
+    } = useWallet();
+    const wallets = chain[pathPrefix];
+    const showPrivateKeyFromIdx = async (idx: number) => {
+        if (idx < 0 || idx >= wallets.length) {
+            throw new Error(idx + ' is not a valid index for the ' + (wallets.length + 1) + ' sized wallet array');
+        }
+        const wallet = wallets[idx];
+        const cipheredBase64Key = wallet.cipherPrivateKeyString;
+        const encIV = wallet.encIV;
+        return await decryptData({ cipherEncString: cipheredBase64Key, encIV });
+    };
+
+    
+    const encryptAndStoreWallet = async (path: string, publicKey: string, privateKey: string) => {
+        const res = await encryptData(privateKey);
+        if (!res) {
+            throw new Error('Something went wrong while encrypting wallet details');
+        }
+        const wallet: Wallet = {
+            path,
+            publicKeyString: publicKey,
+            cipherPrivateKeyString: res.cipherEncString,
+            encIV: res.encIV
+        }
+        addWalletCtx(pathPrefix, wallet);
+    };
+
+    const clearWallets = () => {
+        clearWalletsCtx(pathPrefix);
+    };
+    return{
+        showPrivateKeyFromIdx,
+        encryptAndStoreWallet,
+        clearWallets
     }
 }

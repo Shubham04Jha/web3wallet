@@ -1,30 +1,35 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { CipherData, Wallet } from "../lib/types";
+import type { CipherData, Wallet, PathPrefix } from "../lib/types";
 
 type WalletState = {
     recoveryPhrase: CipherData;
     test: CipherData;
     salt: string;
-    wallets: Wallet[];
-};
-
-type WalletContextType = WalletState & {
-    isLoading: boolean;
-    isInitialized: boolean;
-    sync: (newState: Partial<WalletState>) => void;
-    addWallet: (wallet: Wallet) => void;
-    clearWallets: () => void;
-    resetWalletStore: (test: CipherData, recoveryPhrase: CipherData, salt: string) => void;
-    addTestToStore: (test: CipherData) => void;
-    addRecoveryPhraseToStore: (recoveryPhrase: CipherData) => void;
-    addSaltToStore: (salt: string) => void;
+    chain: {
+        [K in PathPrefix]: Wallet[];
+    };
 };
 
 const defaultState: WalletState = {
     recoveryPhrase: { encIV: '', cipherEncString: '' },
     test: { encIV: '', cipherEncString: '' },
     salt: '',
-    wallets: [],
+    chain: {
+        "m/44'/501'": [],
+        "m/44'/60'": []
+    }
+};
+
+type WalletContextType = WalletState & {
+    isLoading: boolean;
+    isInitialized: boolean;
+    sync: (newState: Partial<WalletState>) => void;
+    addWallet: (pathPrefix: PathPrefix, wallet: Wallet) => void;
+    clearWallets: (pathPrefix: PathPrefix) => void;
+    resetWalletStore: (test: CipherData, recoveryPhrase: CipherData, salt: string) => void;
+    addTestToStore: (test: CipherData) => void;
+    addRecoveryPhraseToStore: (recoveryPhrase: CipherData) => void;
+    addSaltToStore: (salt: string) => void;
 };
 
 const WalletContext = createContext<WalletContextType | null>(null);
@@ -73,24 +78,43 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
-    const addWallet = (wallet: Wallet) => {
+    const addWallet = (pathPrefix: PathPrefix, wallet: Wallet) => {
         setState(prev => {
-            const next = { ...prev, wallets: [...prev.wallets, wallet] };
+            const next = {
+                ...prev,
+                chain: {
+                    ...prev.chain,
+                    [pathPrefix]: [...(prev.chain[pathPrefix] || []), wallet]
+                }
+            };
             syncToStorage(next);
             return next;
         });
     };
 
-    const clearWallets = () => {
-        sync({ wallets: [] });
+    const clearWallets = (pathPrefix: PathPrefix) => {
+        setState(prev=>{
+            const next = {
+                ...prev,
+                chain: {
+                    ...prev.chain,
+                    [pathPrefix]: []
+                }
+            }
+            syncToStorage(next);
+            return next;
+        });
     };
 
     const resetWalletStore = (test: CipherData, recoveryPhrase: CipherData, salt: string) => {
-        const newState = {
+        const newState: WalletState = {
             recoveryPhrase,
             test,
             salt,
-            wallets: []
+            chain: {
+                "m/44'/501'": [],
+                "m/44'/60'": []
+            }
         };
         sync(newState);
         setIsInitialized(true);
