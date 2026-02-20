@@ -7,7 +7,7 @@ import nacl from 'tweetnacl'
 import { Wallet, HDNodeWallet } from "ethers";
 
 export const getNewRecoveryPhrase = () => {
-  return generateMnemonic(12)
+  return generateMnemonic()
 }
 
 export const isValidRecoveryPhrase = (mnemonic: string): boolean => {
