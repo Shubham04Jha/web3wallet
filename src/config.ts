@@ -1,0 +1,1 @@
+export const BackendAPI = 'https://web3wallet-backend.vercel.app/api'

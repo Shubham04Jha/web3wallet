@@ -62,6 +62,17 @@
       background-position: -200% 0;
     }
   }
+
+  @keyframes dot-bounce {
+    0%, 80%, 100% {
+      transform: scale(0);
+      opacity: 0.3;
+    }
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }
 
 .animate-shimmer {
@@ -71,6 +82,27 @@
       rgba(255, 255, 255, 0) 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
+}
+
+.dot-bounce {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-text-accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: dot-bounce 1.4s infinite ease-in-out both;
+}
+
+.dot-bounce-1 {
+  animation-delay: -0.32s;
+}
+
+.dot-bounce-2 {
+  animation-delay: -0.16s;
+}
+
+.dot-bounce-3 {
+  animation-delay: 0s;
 }
 
 @layer base {
