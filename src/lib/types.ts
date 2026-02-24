@@ -17,3 +17,4 @@ export type DeepReadOnly<T>=
 
 export type PathPrefix = "m/44'/501'"|"m/44'/60'";
 export type ChainName = 'solana'|'ethereum';
+export type ChainType = 'main'|'test';

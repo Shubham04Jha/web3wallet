@@ -9,6 +9,8 @@ import { getWalletGeneratorByPathPrefix } from '../lib/walletGen'
 
 import type { PathPrefix } from '../lib/types'
 import { pathToChain } from '../lib/utils'
+import { useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/Select'
 
 interface WalletsDashBoardInterface {
     text: string,
@@ -16,11 +18,13 @@ interface WalletsDashBoardInterface {
 }
 
 export const WalletsDashBoard = ({ text, path }: WalletsDashBoardInterface) => {
+    const [chainType,setChainType] = useState<'main'|'test'>('main');
     const { chain } = useWallet();
     const wallets = chain[path];
     const { showRecoveryPhrase } = useCrypto();
-    const { encryptAndStoreWallet, showPrivateKeyFromIdx, clearWallets: clearWalletsOfCurrentChain} = useCryptoChain(path);
-    const handleGenerateWallet = async()=>{
+    const { encryptAndStoreWallet, showPrivateKeyFromIdx, clearWallets: clearWalletsOfCurrentChain } = useCryptoChain(path);
+
+    const handleGenerateWallet = async () => {
         const recoveryPhrase = await showRecoveryPhrase();
         if (!recoveryPhrase) {
             console.log('Recovery Phrase not found');
@@ -29,9 +33,24 @@ export const WalletsDashBoard = ({ text, path }: WalletsDashBoardInterface) => {
         const keyRes = await getWalletGeneratorByPathPrefix[path](recoveryPhrase, wallets.length);
         await encryptAndStoreWallet(keyRes.path, keyRes.publicKeyStringB58, keyRes.privateKeyStringB58);
     }
+
     return <div className={cn("text-text-primary my-8 animate-fade-in")}>
         <div className={cn("flex flex-col md:flex-row gap-y-4 justify-between items-center mb-8")}>
-            <p className='font-bold text-4xl tracking-tight text-gradient'>{text}</p>
+            <div className="flex flex-col gap-1">
+                <p className='font-bold text-4xl tracking-tight text-gradient'>{text}</p>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">Network:</span>
+                    <Select value={chainType} onValueChange={(value: 'main' | 'test') => setChainType(value)}>
+                        <SelectTrigger className="w-[120px] h-8 text-xs border-none bg-transparent hover:bg-white/5 focus:ring-0 px-2">
+                            <SelectValue placeholder="Select network" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="main">Mainnet</SelectItem>
+                            <SelectItem value="test">Testnet</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
             <div className={cn("flex gap-4 ")}>
                 <Button icon={<Cog className='my-icon' />}
                     onClick={handleGenerateWallet}
@@ -52,6 +71,7 @@ export const WalletsDashBoard = ({ text, path }: WalletsDashBoardInterface) => {
             ) : (
                 wallets.map((wallet, idx) =>
                     <WalletContainer
+                        chainType={chainType}
                         chain={pathToChain(path)}
                         publicKey={wallet.publicKeyString}
                         getPrivateKey={() => showPrivateKeyFromIdx(idx)}

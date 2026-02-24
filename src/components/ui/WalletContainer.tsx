@@ -1,21 +1,47 @@
-import { Asterisk, Eye, EyeOff } from "lucide-react";
+import { Asterisk, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { cn, copyToClipBoard } from "../../lib/utils";
 import { Button } from "./Button";
 import { useState } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { useBalance } from "../../hooks/useBalance";
+import { LoadingDots } from "./LoadingDots";
+import type { ChainName, ChainType } from "../../lib/types";
 
 interface WalletContainerInterface extends React.HTMLAttributes<HTMLDivElement> {
-    chain: string;
+    chain: ChainName;
+    chainType: ChainType;
     publicKey: string;
     getPrivateKey: () => Promise<string | null>;
     index: number;
 }
 
-export const WalletContainer = ({ className, publicKey, getPrivateKey, index, chain, ...props }: WalletContainerInterface) => {
+export const WalletContainer = ({ className, publicKey, getPrivateKey, index, chain,chainType, ...props }: WalletContainerInterface) => {
+    const { balance, isLoading, error } = useBalance(publicKey, chain, chainType);
+
     return (
         <div {...props} className={cn("border border-border-card w-full rounded-2xl overflow-hidden hover:border-text-accent/30 transition-all duration-300 shadow-lg", className)}>
             <div className="flex justify-between items-center mx-8 my-6">
-                <p className="text-3xl font-bold text-text-primary tracking-tight">Wallet {index + 1}</p>
+                <div className="flex flex-col">
+                    <p className="text-3xl font-bold text-text-primary tracking-tight">Wallet {index + 1}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                        {isLoading ? (
+                            <div className="flex items-center gap-2 text-text-secondary text-sm">
+                                <LoadingDots />
+                                <span>Fetching balance...</span>
+                            </div>
+                        ) : error ? (
+                            <div className="flex items-center gap-1.5 text-error text-sm">
+                                <AlertCircle size={14} />
+                                <span>Server Offline</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-2xl font-mono text-text-accent font-bold">{balance}</span>
+                                <span className="text-sm text-text-secondary font-medium uppercase">{chain === 'solana' ? 'SOL' : 'ETH'}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
                 <div className="px-3 py-1 rounded-full bg-text-accent/10 border border-text-accent/20 text-text-accent text-xs font-mono">
                     {chain}
                 </div>
