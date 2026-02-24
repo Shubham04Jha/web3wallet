@@ -13,11 +13,11 @@ export const useBalance = (address: string, chain: ChainName, chainType: ChainTy
 
         try {
             const normalizedChain = chain.toLowerCase();
-            const endpoint = BackendAPI + `/${chain}/${'getBalance'}`;
+            const endpoint = BackendAPI + `/${chain}/getBalance`;
             const options = {
                 method: 'POST',
                 headers: {
-                    'Content/Type': 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     address,
