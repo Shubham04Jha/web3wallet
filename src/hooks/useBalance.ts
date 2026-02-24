@@ -35,14 +35,14 @@ export const useBalance = (address: string, chain: ChainName, chainType: ChainTy
 
             if (normalizedChain === 'solana') {
                 // Data expected: { lamports: "string" }
-                if (data.lamports) {
-                    const solFloat = Number(data.lamports) / 1000000000;
+                if (data.results) {
+                    const solFloat = Number(data.results) / 1000000000;
                     setBalance(solFloat.toFixed(4));
                 }
             } else {
                 // Data expected: { wei: "0x..." }
-                if (data.wei) {
-                    const eth = ethers.formatEther(data.wei);
+                if (data.results) {
+                    const eth = ethers.formatEther(data.results);
                     setBalance(Number(eth).toFixed(4));
                 }
             }
