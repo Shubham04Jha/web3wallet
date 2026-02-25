@@ -54,7 +54,7 @@ export const useBalance = (address: string, chain: ChainName, chainType: ChainTy
         } finally {
             setIsLoading(false);
         }
-    }, [address, chain]);
+    }, [address, chain, chainType]);
 
     useEffect(() => {
         fetchBalance();
